@@ -4,6 +4,7 @@ import { Menu, X, ArrowRight, Sparkles } from 'lucide-react';
 
 export const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isLogoHovered, setIsLogoHovered] = useState(false);
   const { scrollY } = useScroll();
 
   // Parallax / Scroll Transforms
@@ -47,6 +48,8 @@ export const Navbar = () => {
               className="text-xl font-bold tracking-tight flex items-center gap-2"
               whileHover="hover"
               initial="initial"
+              onHoverStart={() => setIsLogoHovered(true)}
+              onHoverEnd={() => setIsLogoHovered(false)}
             >
               <motion.span 
                 className="w-8 h-8 bg-sand rounded-full flex items-center justify-center text-anthracite font-bold"
@@ -56,8 +59,7 @@ export const Navbar = () => {
                 C
               </motion.span>
               <motion.span 
-                style={{ color: logoText }}
-                variants={{ hover: { color: "#D4A574" } }}
+                style={{ color: isLogoHovered ? "#D4A574" : logoText }}
                 transition={{ duration: 0.2 }}
               >
                 Clément Franjou

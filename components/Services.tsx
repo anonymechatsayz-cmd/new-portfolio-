@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Monitor, Rocket, Search, ArrowRight } from 'lucide-react';
+import { FluidButton } from './FluidButton';
 
 const MonitorAnimation = () => (
   <div className="relative w-32 h-32 flex items-center justify-center">
@@ -151,16 +152,6 @@ const ServiceCard = ({ Animation, title, description, features, index, color, pr
                 {description}
               </p>
             </div>
-            
-            <div className="pb-2">
-              <a 
-                href="#contact" 
-                className="w-full md:w-fit px-6 py-3 md:px-8 md:py-4 bg-white text-anthracite rounded-full font-bold hover:bg-sand hover:text-white transition-all duration-300 flex items-center justify-center gap-2 group text-sm md:text-base shadow-lg"
-              >
-                En savoir plus
-                <ArrowRight className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform" />
-              </a>
-            </div>
           </div>
 
           <div className="h-64 lg:h-full flex items-center justify-center relative order-1 lg:order-2 mb-8 lg:mb-0">
@@ -207,8 +198,8 @@ export const Services = () => {
 
   return (
     <section ref={container} id="services" className="bg-anthracite relative">
-      <div className="container mx-auto px-6 pt-24 pb-48">
-        <div className="mb-16 max-w-3xl mx-auto text-center">
+      <div className="container mx-auto px-6 py-32">
+        <div className="mb-24 max-w-3xl mx-auto text-center">
           <span className="px-4 py-2 rounded-full border border-white/20 text-sm text-white/60 uppercase tracking-widest mb-6 inline-block">Mes Services</span>
           <h2 className="text-5xl md:text-7xl font-bold font-serif text-white mb-8 leading-tight">
             Transformer vos idées <br />
@@ -216,7 +207,7 @@ export const Services = () => {
           </h2>
         </div>
 
-        <div className="mt-8">
+        <div className="mt-8 mb-24">
           {services.map((service, index) => {
             const targetScale = 1 - ((services.length - index) * 0.05);
             return (
@@ -230,6 +221,12 @@ export const Services = () => {
               />
             );
           })}
+        </div>
+
+        <div className="flex justify-center">
+           <FluidButton href="#contact" className="px-12 py-5 text-lg font-bold min-w-[300px] text-anthracite" bgClass="bg-white">
+             Discuter de mon projet <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+           </FluidButton>
         </div>
       </div>
     </section>

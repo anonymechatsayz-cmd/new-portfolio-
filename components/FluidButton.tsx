@@ -6,9 +6,10 @@ interface FluidButtonProps {
   onClick?: () => void;
   className?: string;
   href?: string;
+  bgClass?: string;
 }
 
-export const FluidButton = ({ children, onClick, className = "", href }: FluidButtonProps) => {
+export const FluidButton = ({ children, onClick, className = "", href, bgClass }: FluidButtonProps) => {
   const Component = href ? motion.a : motion.button;
   const ref = useRef<any>(null);
   
@@ -19,6 +20,7 @@ export const FluidButton = ({ children, onClick, className = "", href }: FluidBu
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!ref.current) return;
     const rect = ref.current.getBoundingClientRect();
+    mouseX.set(e.clientX - rect.left);
     mouseX.set(e.clientX - rect.left);
     mouseY.set(e.clientY - rect.top);
   };
@@ -31,12 +33,12 @@ export const FluidButton = ({ children, onClick, className = "", href }: FluidBu
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`relative overflow-hidden group rounded-full font-bold text-white shadow-lg hover:shadow-sand/20 transition-all duration-300 border border-white/10 ${className || "px-8 py-4"}`}
+      className={`relative overflow-hidden group rounded-full font-bold shadow-lg hover:shadow-sand/20 transition-all duration-300 border border-white/10 ${className || "px-8 py-4 text-white"}`}
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
     >
-      {/* Base Background (Premium Dark) */}
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-[#1a1d29] z-0" />
+      {/* Base Background */}
+      <div className={`absolute inset-0 z-0 ${bgClass || "bg-gradient-to-br from-gray-800 to-[#1a1d29]"}`} />
       
       {/* Interactive Fluid Gradient - Depth Effect */}
       <motion.div 
@@ -68,7 +70,7 @@ export const FluidButton = ({ children, onClick, className = "", href }: FluidBu
       />
 
       {/* Content */}
-      <span className="relative z-20 flex items-center justify-center gap-2 text-white tracking-wide">
+      <span className="relative z-20 flex items-center justify-center gap-2 tracking-wide">
         {children}
       </span>
     </Component>

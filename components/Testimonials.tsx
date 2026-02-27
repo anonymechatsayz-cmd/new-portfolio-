@@ -87,14 +87,8 @@ export const Testimonials = () => {
         <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-paper to-transparent z-10"></div>
         <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-paper to-transparent z-10"></div>
         
-        <motion.div
-          className="flex"
-          animate={{ x: ["0%", "-50%"] }}
-          transition={{ 
-            repeat: Infinity, 
-            ease: "linear", 
-            duration: 40 
-          }}
+        <div
+          className="flex animate-scroll pause-on-hover"
         >
           {[...testimonials, ...testimonials].map((testimonial, index) => (
             <TestimonialCard 
@@ -104,7 +98,7 @@ export const Testimonials = () => {
               role={testimonial.role}
             />
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

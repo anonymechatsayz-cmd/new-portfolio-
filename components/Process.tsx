@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Search, FileText, Code, Rocket, ArrowRight } from 'lucide-react';
+import { FluidButton } from './FluidButton';
 
 const Step = ({ icon: Icon, number, title, description, isLast }: any) => {
   return (
@@ -69,7 +70,7 @@ export const Process = () => {
   ];
 
   return (
-    <section id="process" className="py-24 bg-paper overflow-hidden">
+    <section id="process" className="py-32 bg-paper overflow-hidden">
       <div className="container mx-auto px-6">
         <div className="grid lg:grid-cols-2 gap-16 items-start">
           
@@ -129,15 +130,11 @@ export const Process = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="pl-16 md:pl-24 mt-8"
+              className="pl-16 md:pl-24 mt-8 flex justify-start"
             >
-              <a 
-                href="#contact" 
-                className="inline-flex items-center gap-3 px-8 py-4 bg-sand text-white rounded-full font-bold shadow-lg hover:bg-amber-600 hover:shadow-xl transition-all group"
-              >
-                Lancer l'étape 1
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </a>
+              <FluidButton href="#contact" className="px-8 py-4 text-white" bgClass="bg-sand">
+                Démarrer l'audit gratuit <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </FluidButton>
             </motion.div>
           </div>
 

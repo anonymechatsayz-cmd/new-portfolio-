@@ -2,13 +2,14 @@ import React, { useRef, useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowUpRight, ArrowRight } from 'lucide-react';
 import { CaseStudyModal } from './CaseStudyModal';
+import { FluidButton } from './FluidButton';
 
 const projects = [
   {
-    title: "L.C. Élagage",
-    category: "Paysagiste • Île-de-France",
-    description: "Refonte complète de l'identité numérique pour cet artisan paysagiste. L'objectif était clair : générer plus de leads qualifiés et moderniser l'image de marque.",
-    image: "https://images.unsplash.com/photo-1558904541-efa843a96f01?auto=format&fit=crop&q=80&w=1600",
+    title: "L.C. Élagage et Paysage",
+    category: "Paysagiste • Essonne & Île-de-France",
+    description: "Création, aménagement et entretien : l'excellence au service de vos jardins et espaces verts depuis 2011. Une refonte complète pour refléter une expertise d'exception.",
+    image: "https://i.postimg.cc/pXjn1wKS/Screenshot-2026-02-27-at-14-08-17-Copy-of-Copy-of-L-C-Elagage-e-Google-AI-Studio.png",
     stats: "12 devis signés le 1er mois • Lighthouse 98/100",
     challenges: [
       "Visibilité quasi-nulle sur les moteurs de recherche locaux.",
@@ -27,53 +28,53 @@ const projects = [
     ]
   },
   {
-    title: "Bistrot Le Marais",
-    category: "Restauration • Paris",
-    description: "Création d'une expérience digitale immersive pour ce restaurant parisien. Intégration du menu dynamique et système de réservation simplifié.",
-    image: "https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&q=80&w=1600",
-    stats: "+40% de réservations en ligne dès la première semaine",
+    title: "Foggia Ristorante",
+    category: "Restauration • Longjumeau (91)",
+    description: "Création d'une identité digitale chaleureuse pour cette pizzeria familiale. Mise en avant de l'authenticité italienne et simplification du parcours de réservation.",
+    image: "https://i.postimg.cc/xjMfrnF8/Screenshot-2026-02-27-151317.png",
+    stats: "+50% de réservations directes • Note Google 4.8/5",
     challenges: [
-      "Gestion des réservations téléphoniques chronophage.",
-      "Menu PDF difficile à lire sur mobile.",
-      "Identité visuelle en ligne ne reflétant pas l'ambiance du lieu."
+      "Ancien site peu attractif ne reflétant pas la qualité des produits frais.",
+      "Difficulté pour les clients de consulter la carte sur mobile.",
+      "Gestion des avis clients dispersée et peu visible."
     ],
     solutions: [
-      "Intégration d'un module de réservation en temps réel (Zenchef/TheFork).",
-      "Menu digital interactif et appétissant avec photos HD.",
-      "Design immersif capturant l'atmosphère chaleureuse du bistrot."
+      "Design immersif avec photos HD (four à bois, plats) pour ouvrir l'appétit.",
+      "Intégration des avis Google en temps réel pour rassurer les nouveaux clients.",
+      "Boutons d'action clairs (Réserver, Commander) pour maximiser la conversion."
     ],
     results: [
-      "Réduction de 50% des appels téléphoniques pendant le service.",
-      "Hausse du ticket moyen grâce à la mise en avant des suggestions.",
-      "Site élu 'Site du mois' par une communauté de foodies."
+      "Augmentation significative du ticket moyen grâce aux visuels alléchants.",
+      "Meilleur référencement local sur 'Pizzeria Longjumeau'.",
+      "Fidélisation accrue grâce à une expérience utilisateur fluide."
     ]
   },
   {
-    title: "Cabinet Dr. Rousseau",
-    category: "Santé • Dentiste",
-    description: "Site vitrine rassurant et professionnel pour un cabinet dentaire. Focus sur la prise de rendez-vous et la présentation de l'équipe.",
-    image: "https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=1600",
-    stats: "Visibilité locale améliorée • Top 3 Google Maps",
+    title: "Cabinet Julie Solassol",
+    category: "Avocat • Épinay-sur-Orge & Essonne",
+    description: "Refonte de l'identité numérique d'un cabinet d'avocat historique (2009). Une interface sobre et rassurante mettant en lumière l'expertise en droit de la santé, pénal et dommage corporel.",
+    image: "https://i.postimg.cc/VksNwp36/Screenshot-2026-02-27-145305.png",
+    stats: "+40% de contacts qualifiés • Image de marque modernisée",
     challenges: [
-      "Patientèle vieillissante, difficulté à attirer de nouveaux patients.",
-      "Image du cabinet perçue comme 'froide' et 'clinique'.",
-      "Manque d'informations claires sur les soins proposés."
+      "Site web vieillissant ne reflétant plus l'expertise et la passion du cabinet.",
+      "Difficulté pour les clients d'identifier clairement les domaines d'intervention (Famille, Pénal, Santé).",
+      "Absence de mise en avant de l'approche humaine et de la médiation."
     ],
     solutions: [
-      "Shooting photo professionnel pour humaniser l'équipe.",
-      "Pages dédiées pour chaque type de soin avec explications pédagogiques.",
-      "Intégration fluide de Doctolib pour la prise de RDV."
+      "Design épuré et professionnel inspirant confiance et sérénité.",
+      "Architecture de l'information repensée par pôles de compétences.",
+      "Intégration d'une section 'Qui suis-je ?' valorisant le parcours et les valeurs."
     ],
     results: [
-      "Rajeunissement significatif de la patientèle.",
-      "Meilleure préparation des patients aux consultations (moins d'anxiété).",
-      "Augmentation de la visibilité sur les recherches 'Urgence dentaire'."
+      "Renforcement immédiat de la crédibilité en ligne.",
+      "Meilleure compréhension des services par les prospects.",
+      "Positionnement local fort sur Épinay-sur-Orge."
     ]
   }
 ];
 
 interface ProjectProps {
-  project: typeof projects[0];
+  project: typeof projects[0] & { component?: React.ReactNode };
   index: number;
   onOpen: () => void;
 }
@@ -102,18 +103,30 @@ const Project: React.FC<ProjectProps> = ({ project, index, onOpen }) => {
           {/* Glow Effect */}
           <div className="absolute -inset-4 bg-sand/20 rounded-[2rem] blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
           
-          <div className="overflow-hidden rounded-2xl shadow-2xl aspect-[16/10] relative cursor-pointer z-10" onClick={onOpen}>
-            <motion.img 
-              style={{ y }}
-              variants={{
-                hover: { scale: 1.15 }
-              }}
-              initial={{ scale: 1.1 }}
-              transition={{ duration: 0.7, ease: "easeOut" }}
-              src={project.image} 
-              alt={project.title} 
-              className="w-full h-full object-cover"
-            />
+          <div className="overflow-hidden rounded-2xl shadow-2xl aspect-video relative cursor-pointer z-10" onClick={onOpen}>
+            {project.component ? (
+              <motion.div 
+                className="w-full h-full"
+                variants={{
+                  hover: { scale: 1.02 }
+                }}
+                initial={{ scale: 1 }}
+                transition={{ duration: 0.7, ease: "easeOut" }}
+              >
+                {project.component}
+              </motion.div>
+            ) : project.image ? (
+              <motion.img 
+                variants={{
+                  hover: { scale: 1.05 }
+                }}
+                initial={{ scale: 1 }}
+                transition={{ duration: 0.7, ease: "easeOut" }}
+                src={project.image} 
+                alt={project.title} 
+                className="w-full h-full object-cover object-top"
+              />
+            ) : null}
             <div className="absolute inset-0 bg-anthracite/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
               <span className="bg-white/90 backdrop-blur-sm text-anthracite px-8 py-4 rounded-full font-bold text-sm uppercase tracking-widest transform translate-y-8 group-hover:translate-y-0 transition-all duration-500 shadow-xl">
                 Voir le projet
@@ -167,14 +180,10 @@ export const Portfolio = () => {
           ))}
         </div>
 
-        <div className="text-center">
-          <a 
-            href="#contact" 
-            className="inline-flex items-center gap-3 px-8 py-4 bg-anthracite text-white rounded-full font-bold shadow-lg hover:bg-petrol hover:shadow-xl transition-all group"
-          >
-            Obtenir un résultat similaire
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          </a>
+        <div className="flex justify-center">
+          <FluidButton href="#contact" className="px-8 py-4 text-white" bgClass="bg-anthracite">
+            Obtenir un résultat similaire <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+          </FluidButton>
         </div>
       </div>
 

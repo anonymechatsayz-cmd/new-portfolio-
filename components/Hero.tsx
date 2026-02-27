@@ -62,7 +62,7 @@ export const Hero = () => {
   };
 
   return (
-    <section id="hero" className="relative min-h-screen flex items-center justify-center pt-28 md:pt-40 overflow-hidden bg-cream">
+    <section id="hero" className="relative min-h-screen flex items-center justify-center pt-32 md:pt-48 overflow-hidden bg-cream">
       {/* Background Elements */}
       <div className="absolute inset-0 z-0">
         <InteractiveBackground />
