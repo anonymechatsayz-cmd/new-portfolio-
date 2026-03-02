@@ -130,11 +130,18 @@ export const Process = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="pl-16 md:pl-24 mt-8 flex justify-start"
+              className="pl-16 md:pl-24 mt-8 flex justify-start pr-6 md:pr-0"
             >
-              <FluidButton href="#contact" className="px-8 py-4 text-white" bgClass="bg-sand">
-                Démarrer l'audit gratuit <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </FluidButton>
+              <div className="w-full md:w-auto">
+                <FluidButton 
+                  href="#contact" 
+                  className="w-full md:w-auto px-6 md:px-8 py-4 text-base md:text-lg font-bold text-white flex items-center justify-center gap-3" 
+                  bgClass="bg-sand"
+                >
+                  <span>Démarrer l'audit gratuit</span>
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </FluidButton>
+              </div>
             </motion.div>
           </div>
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, CheckCircle2, ArrowRight, Target, Lightbulb, TrendingUp } from 'lucide-react';
 
@@ -18,6 +18,20 @@ interface CaseStudyModalProps {
 }
 
 export const CaseStudyModal: React.FC<CaseStudyModalProps> = ({ isOpen, onClose, project }) => {
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    };
+  }, [isOpen]);
+
   if (!project) return null;
 
   return (
@@ -41,7 +55,7 @@ export const CaseStudyModal: React.FC<CaseStudyModalProps> = ({ isOpen, onClose,
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
           >
-            <div className="bg-white w-full max-w-5xl h-full max-h-[90vh] md:max-h-[85vh] overflow-hidden rounded-[2rem] shadow-2xl pointer-events-auto relative flex flex-col md:flex-row">
+            <div className="bg-white w-full max-w-5xl h-full max-h-[90vh] md:max-h-[85vh] overflow-hidden rounded-[2rem] shadow-2xl pointer-events-auto relative flex flex-col md:flex-row overscroll-contain">
               
               {/* Close Button (Floating) */}
               <button 
@@ -57,6 +71,8 @@ export const CaseStudyModal: React.FC<CaseStudyModalProps> = ({ isOpen, onClose,
                 <img 
                   src={project.image} 
                   alt={project.title} 
+                  decoding="async"
+                  fetchPriority="high"
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-anthracite/90 via-anthracite/40 to-transparent z-20 flex flex-col justify-end p-8 md:p-10">

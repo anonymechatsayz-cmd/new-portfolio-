@@ -40,16 +40,16 @@ export const Footer = () => {
       <div className="container mx-auto px-6">
         <div className="flex flex-col md:flex-row justify-between items-start gap-16 mb-24 text-center md:text-left">
           <div className="max-w-xl mx-auto md:mx-0">
-            <h2 className="text-5xl md:text-7xl font-bold font-serif mb-8 tracking-tight">
+            <h2 className="text-4xl sm:text-5xl md:text-7xl font-bold font-serif mb-8 tracking-tight">
               Travaillons <br />
               <span className="text-sand">ensemble.</span>
             </h2>
             <a 
               href="mailto:contact@clementfranjou.fr" 
-              className="text-2xl md:text-3xl text-gray-400 hover:text-white transition-colors flex items-center justify-center md:justify-start gap-4 group mb-8"
+              className="text-lg sm:text-2xl md:text-3xl text-gray-400 hover:text-white transition-colors flex items-center justify-center md:justify-start gap-2 sm:gap-4 group mb-8 break-all sm:break-normal"
             >
               contact@clementfranjou.fr
-              <ArrowUpRight className="w-8 h-8 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+              <ArrowUpRight className="w-6 h-6 sm:w-8 sm:h-8 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform shrink-0" />
             </a>
             
             <div className="flex justify-center md:justify-start">
@@ -59,7 +59,7 @@ export const Footer = () => {
             </div>
           </div>
 
-          <div className="flex flex-col md:flex-row gap-16 mx-auto md:mx-0">
+          <div className="flex flex-col sm:flex-row gap-8 sm:gap-16 mx-auto md:mx-0 text-center sm:text-left">
             <div>
               <h3 className="font-bold text-white mb-6 uppercase tracking-widest text-sm">Menu</h3>
               <ul className="space-y-4 text-gray-400">
@@ -80,7 +80,7 @@ export const Footer = () => {
           </div>
         </div>
 
-        <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-500">
+        <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6 md:gap-4 text-sm text-gray-500 text-center md:text-left">
           <div>
             © {new Date().getFullYear()} Clément Franjou. Tous droits réservés.
           </div>

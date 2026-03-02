@@ -11,19 +11,21 @@ const ScrollingWord = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setIndex((prev) => (prev + 1) % words.length);
-    }, 2500);
+    }, 3000);
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <div className="h-[1.2em] overflow-hidden inline-flex flex-col justify-start align-top relative min-w-[2ch]">
+    <div className="h-[1.2em] overflow-hidden inline-flex flex-col justify-start align-top relative min-w-[2ch] text-[1.1em] align-middle px-1">
       <AnimatePresence mode="popLayout">
         <motion.span
           key={index}
-          initial={{ y: "100%", opacity: 0, filter: "blur(10px)" }}
-          animate={{ y: "0%", opacity: 1, filter: "blur(0px)" }}
-          exit={{ y: "-100%", opacity: 0, filter: "blur(10px)" }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }} // Custom ease for smooth snap
+          initial={{ y: "110%" }}
+          animate={{ y: "0%" }}
+          exit={{ y: "-110%" }}
+          transition={{ 
+            y: { duration: 0.8, ease: [0.16, 1, 0.3, 1] }, // Apple-style smooth ease
+          }}
           className="block text-sand whitespace-nowrap absolute top-0 left-0 right-0 text-center md:text-left"
         >
           {words[index]}.
@@ -62,7 +64,7 @@ export const Hero = () => {
   };
 
   return (
-    <section id="hero" className="relative min-h-screen flex items-center justify-center pt-32 md:pt-48 overflow-hidden bg-cream">
+    <section id="hero" className="relative min-h-screen flex items-center justify-center pt-32 pb-10 md:pt-48 md:pb-0 overflow-hidden bg-cream">
       {/* Background Elements */}
       <div className="absolute inset-0 z-0">
         <InteractiveBackground />
@@ -96,7 +98,7 @@ export const Hero = () => {
 
           <motion.h1
             variants={itemVariants}
-            className="text-4xl md:text-6xl lg:text-7xl font-bold font-serif text-anthracite leading-[1.1] mb-8 tracking-tight"
+            className="text-4xl md:text-6xl lg:text-7xl font-bold font-serif text-anthracite leading-[1.1] mb-8 tracking-tight text-balance"
           >
             Transformez vos visiteurs <br className="hidden md:block" />
             en <ScrollingWord />
@@ -104,17 +106,17 @@ export const Hero = () => {
 
           <motion.p
             variants={itemVariants}
-            className="text-lg md:text-xl text-gray-600 max-w-2xl mb-10 leading-relaxed"
+            className="text-lg md:text-xl text-gray-600 max-w-2xl mb-10 leading-relaxed text-balance"
           >
-            Spécialiste Next.js pour artisans et PME. <br />
-            <span className="text-anthracite font-semibold">Site livré en 7 jours. Résultats garantis.</span>
+            Spécialiste Next.js pour artisans et&nbsp;PME. <br className="hidden md:block" />
+            <span className="text-anthracite font-semibold">Site livré en 7 jours. Résultats&nbsp;garantis.</span>
           </motion.p>
 
           <motion.div
             variants={itemVariants}
             className="flex flex-col sm:flex-row gap-4 items-center justify-center w-full"
           >
-            <FluidButton href="#contact">
+            <FluidButton href="#contact" className="w-full sm:w-auto px-8 py-4 text-white text-lg">
               Réserver un appel <ArrowUpRight className="w-5 h-5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
             </FluidButton>
             
@@ -122,7 +124,7 @@ export const Hero = () => {
               href="#services"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="px-8 py-4 bg-white border border-gray-200 text-anthracite rounded-full font-medium text-lg flex items-center gap-2 w-full sm:w-auto justify-center hover:border-sand hover:text-sand transition-colors"
+              className="px-8 py-4 bg-white border border-gray-200 text-anthracite rounded-full font-medium text-lg flex items-center gap-2 w-full sm:w-auto justify-center hover:border-sand hover:text-sand transition-colors shadow-sm"
             >
               Découvrir mes services
             </motion.a>
@@ -130,7 +132,7 @@ export const Hero = () => {
 
           <motion.div
             variants={itemVariants}
-            className="mt-16 w-full overflow-hidden relative"
+            className="mt-16 w-full overflow-hidden relative hidden md:block"
           >
             {/* Gradient Masks for fade effect - Increased width for smoother fade */}
             <div className="absolute left-0 top-0 bottom-0 w-24 md:w-48 bg-gradient-to-r from-cream to-transparent z-10"></div>

@@ -124,6 +124,8 @@ const Project: React.FC<ProjectProps> = ({ project, index, onOpen }) => {
                 transition={{ duration: 0.7, ease: "easeOut" }}
                 src={project.image} 
                 alt={project.title} 
+                loading="lazy"
+                decoding="async"
                 className="w-full h-full object-cover object-top"
               />
             ) : null}
@@ -180,10 +182,17 @@ export const Portfolio = () => {
           ))}
         </div>
 
-        <div className="flex justify-center">
-          <FluidButton href="#contact" className="px-8 py-4 text-white" bgClass="bg-anthracite">
-            Obtenir un résultat similaire <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          </FluidButton>
+        <div className="flex justify-center px-4">
+          <div className="w-full md:w-auto">
+            <FluidButton 
+              href="#contact" 
+              className="w-full md:w-auto px-8 py-4 text-base md:text-lg font-bold text-white flex items-center justify-center gap-3" 
+              bgClass="bg-anthracite"
+            >
+              <span>Obtenir un résultat similaire</span>
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </FluidButton>
+          </div>
         </div>
       </div>
 

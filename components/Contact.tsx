@@ -64,43 +64,43 @@ export const Contact = () => {
               Prêt à transformer votre présence en ligne ? Remplissez le formulaire ou réservez un appel découverte.
             </p>
             
-            <div className="space-y-8 inline-block text-left">
-              <div className="flex items-center gap-6 group">
-                <div className="w-14 h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-petrol transition-colors">
-                  <Mail className="w-6 h-6 text-sand group-hover:text-white transition-colors" />
+            <div className="space-y-6 md:space-y-8 inline-block text-left w-full md:w-auto">
+              <div className="flex items-center gap-4 md:gap-6 group">
+                <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-petrol transition-colors shrink-0">
+                  <Mail className="w-5 h-5 md:w-6 md:h-6 text-sand group-hover:text-white transition-colors" />
                 </div>
-                <div>
-                  <div className="text-sm text-gray-500 uppercase tracking-wider mb-1">Email</div>
-                  <div className="text-xl font-medium">contact@clementfranjou.fr</div>
+                <div className="min-w-0">
+                  <div className="text-xs md:text-sm text-gray-500 uppercase tracking-wider mb-1">Email</div>
+                  <div className="text-lg md:text-xl font-medium break-all sm:break-normal">contact@clementfranjou.fr</div>
                 </div>
               </div>
               
-              <div className="flex items-center gap-6 group">
-                <div className="w-14 h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-petrol transition-colors">
-                  <MapPin className="w-6 h-6 text-sand group-hover:text-white transition-colors" />
+              <div className="flex items-center gap-4 md:gap-6 group">
+                <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-petrol transition-colors shrink-0">
+                  <MapPin className="w-5 h-5 md:w-6 md:h-6 text-sand group-hover:text-white transition-colors" />
                 </div>
                 <div>
-                  <div className="text-sm text-gray-500 uppercase tracking-wider mb-1">Localisation</div>
-                  <div className="text-xl font-medium">Paris & Île-de-France</div>
+                  <div className="text-xs md:text-sm text-gray-500 uppercase tracking-wider mb-1">Localisation</div>
+                  <div className="text-lg md:text-xl font-medium">Paris & Île-de-France</div>
                 </div>
               </div>
 
-              <div className="flex items-center gap-6 group">
-                <div className="w-14 h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-petrol transition-colors">
-                  <Clock className="w-6 h-6 text-sand group-hover:text-white transition-colors" />
+              <div className="flex items-center gap-4 md:gap-6 group">
+                <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-petrol transition-colors shrink-0">
+                  <Clock className="w-5 h-5 md:w-6 md:h-6 text-sand group-hover:text-white transition-colors" />
                 </div>
                 <div>
-                  <div className="text-sm text-gray-500 uppercase tracking-wider mb-1">Disponibilité</div>
-                  <div className="text-xl font-medium">Lun - Ven, 9h - 19h</div>
+                  <div className="text-xs md:text-sm text-gray-500 uppercase tracking-wider mb-1">Disponibilité</div>
+                  <div className="text-lg md:text-xl font-medium">Lun - Ven, 9h - 19h</div>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-3xl p-6 md:p-12 text-anthracite shadow-2xl min-h-[750px] flex flex-col">
+          <div className="bg-white rounded-3xl p-6 md:p-12 text-anthracite shadow-2xl min-h-[600px] md:min-h-[750px] flex flex-col">
             {/* Toggle Switch */}
-            <div className="flex justify-center mb-10">
-              <div className="bg-paper p-1.5 rounded-full inline-flex relative shadow-inner" role="tablist" aria-label="Type de contact">
+            <div className="flex justify-center mb-8 md:mb-10">
+              <div className="bg-paper p-1.5 rounded-full inline-flex relative shadow-inner w-full sm:w-auto" role="tablist" aria-label="Type de contact">
                 <div 
                   className={`absolute top-1.5 bottom-1.5 rounded-full bg-anthracite shadow-md transition-all duration-300 ease-in-out ${
                     activeTab === 'form' ? 'left-1.5 w-[calc(50%-6px)]' : 'left-[50%] w-[calc(50%-6px)]'
@@ -112,7 +112,7 @@ export const Contact = () => {
                   aria-selected={activeTab === 'form'}
                   aria-controls="contact-form-panel"
                   id="tab-form"
-                  className={`relative z-10 px-6 py-2.5 rounded-full text-sm font-bold transition-colors duration-300 ${
+                  className={`relative z-10 flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-full text-xs sm:text-sm font-bold transition-colors duration-300 ${
                     activeTab === 'form' ? 'text-white' : 'text-gray-500 hover:text-anthracite'
                   }`}
                 >
@@ -124,7 +124,7 @@ export const Contact = () => {
                   aria-selected={activeTab === 'call'}
                   aria-controls="contact-call-panel"
                   id="tab-call"
-                  className={`relative z-10 px-6 py-2.5 rounded-full text-sm font-bold transition-colors duration-300 ${
+                  className={`relative z-10 flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-full text-xs sm:text-sm font-bold transition-colors duration-300 ${
                     activeTab === 'call' ? 'text-white' : 'text-gray-500 hover:text-anthracite'
                   }`}
                 >

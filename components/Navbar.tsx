@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
-import { Menu, X, ArrowRight, Sparkles } from 'lucide-react';
+import { X, ArrowRight, Sparkles } from 'lucide-react';
 
 export const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -119,15 +119,38 @@ export const Navbar = () => {
             </div>
 
             {/* Mobile Toggle */}
-            <button 
-              className="md:hidden p-2"
+            <motion.button 
+              className="md:hidden p-2 group"
               onClick={() => setMobileMenuOpen(true)}
               aria-label="Ouvrir le menu"
+              whileHover="hover"
+              whileTap="tap"
             >
-              <motion.div style={{ color: textColor }}>
-                <Menu />
+              <motion.div 
+                style={{ color: textColor }}
+                className="w-6 h-6 flex flex-col justify-center items-end gap-[5px]"
+              >
+                <motion.span 
+                  className="h-[2px] bg-current rounded-full w-full"
+                  variants={{
+                    hover: { width: "60%" },
+                    tap: { width: "60%" }
+                  }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                />
+                <motion.span 
+                  className="h-[2px] bg-current rounded-full w-full"
+                />
+                <motion.span 
+                  className="h-[2px] bg-current rounded-full w-full"
+                  variants={{
+                    hover: { width: "80%" },
+                    tap: { width: "80%" }
+                  }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                />
               </motion.div>
-            </button>
+            </motion.button>
           </motion.div>
         </div>
       </motion.nav>

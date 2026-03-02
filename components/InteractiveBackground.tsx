@@ -81,8 +81,12 @@ export const InteractiveBackground = () => {
 
     const init = () => {
       particles = [];
-      // Higher density for the pixel dust effect
-      const particleCount = window.innerWidth < 768 ? 60 : 150;
+      // Respect reduced motion preference
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReducedMotion) return;
+
+      // Higher density for the pixel dust effect, but optimized for mobile
+      const particleCount = window.innerWidth < 768 ? 30 : 150;
       for (let i = 0; i < particleCount; i++) {
         particles.push(new Particle(canvas.width, canvas.height));
       }

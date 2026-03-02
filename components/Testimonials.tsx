@@ -1,6 +1,6 @@
-import React from 'react';
-import { Quote, Star, BadgeCheck } from 'lucide-react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { Quote, Star, BadgeCheck, ChevronLeft, ChevronRight } from 'lucide-react';
+import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
 
 const testimonials = [
   {
@@ -35,15 +35,15 @@ const testimonials = [
   }
 ];
 
-const TestimonialCard: React.FC<{ quote: string, author: string, role: string }> = ({ quote, author, role }) => (
+const TestimonialCard: React.FC<{ quote: string, author: string, role: string, className?: string }> = ({ quote, author, role, className = "" }) => (
   <motion.div 
     whileHover={{ 
-      scale: 1.05, 
-      y: -10,
+      scale: 1.02, 
+      y: -5,
       boxShadow: "0 20px 40px -5px rgba(212, 165, 116, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1)" 
     }}
     transition={{ type: "spring", stiffness: 300, damping: 20 }}
-    className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 hover:border-sand/40 relative w-[400px] flex-shrink-0 mx-4 h-full flex flex-col justify-between cursor-default transition-colors duration-300"
+    className={`bg-white p-6 md:p-8 rounded-2xl md:rounded-3xl shadow-sm border border-gray-100 hover:border-sand/40 relative flex flex-col justify-between cursor-default transition-colors duration-300 ${className}`}
   >
     <div className="absolute top-6 left-6 text-sand/20">
       <Quote size={40} />
@@ -54,7 +54,7 @@ const TestimonialCard: React.FC<{ quote: string, author: string, role: string }>
           <Star key={i} className="w-4 h-4 text-sand fill-sand" />
         ))}
       </div>
-      <p className="text-lg text-anthracite font-medium leading-relaxed mb-6">
+      <p className="text-base md:text-lg text-anthracite font-medium leading-relaxed mb-4 md:mb-6">
         "{quote}"
       </p>
       <div>
@@ -72,9 +72,24 @@ const TestimonialCard: React.FC<{ quote: string, author: string, role: string }>
 );
 
 export const Testimonials = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const handleDragEnd = (event: any, info: any) => {
+    const threshold = 50;
+    if (info.offset.x < -threshold) {
+      if (currentIndex < testimonials.length - 1) {
+        setCurrentIndex(currentIndex + 1);
+      }
+    } else if (info.offset.x > threshold) {
+      if (currentIndex > 0) {
+        setCurrentIndex(currentIndex - 1);
+      }
+    }
+  };
+
   return (
     <section id="testimonials" className="py-24 bg-paper overflow-hidden">
-      <div className="container mx-auto px-6 mb-16">
+      <div className="container mx-auto px-6 mb-12 md:mb-16">
         <div className="flex flex-col md:flex-row justify-between items-end gap-6 text-center md:text-left">
           <div className="max-w-2xl mx-auto md:mx-0">
             <span className="text-sand font-bold tracking-widest uppercase text-sm mb-4 block">Témoignages</span>
@@ -83,19 +98,65 @@ export const Testimonials = () => {
         </div>
       </div>
 
-      <div className="relative flex w-full">
+      {/* Desktop View - Marquee */}
+      <div className="hidden md:flex relative w-full">
         <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-paper to-transparent z-10"></div>
         <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-paper to-transparent z-10"></div>
         
-        <div
-          className="flex animate-scroll pause-on-hover"
-        >
+        <div className="flex animate-scroll pause-on-hover">
           {[...testimonials, ...testimonials].map((testimonial, index) => (
-            <TestimonialCard 
+            <div key={index} className="mx-4 w-[400px] flex-shrink-0 h-full">
+              <TestimonialCard 
+                quote={testimonial.quote}
+                author={testimonial.author}
+                role={testimonial.role}
+                className="h-full"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Mobile View - Swipe Carousel */}
+      <div className="md:hidden px-6">
+        <div className="relative overflow-hidden min-h-[400px]">
+          <motion.div
+            className="flex touch-pan-y"
+            style={{ width: `${testimonials.length * 100}%` }}
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.2}
+            onDragEnd={handleDragEnd}
+            animate={{ x: `-${currentIndex * (100 / testimonials.length)}%` }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          >
+            {testimonials.map((testimonial, index) => (
+              <div 
+                key={index} 
+                className="flex-shrink-0 px-2 h-full"
+                style={{ width: `${100 / testimonials.length}%` }}
+              >
+                <TestimonialCard 
+                  quote={testimonial.quote}
+                  author={testimonial.author}
+                  role={testimonial.role}
+                  className="h-full"
+                />
+              </div>
+            ))}
+          </motion.div>
+        </div>
+
+        {/* Mobile Navigation Dots */}
+        <div className="flex justify-center gap-2 mt-6">
+          {testimonials.map((_, index) => (
+            <button
               key={index}
-              quote={testimonial.quote}
-              author={testimonial.author}
-              role={testimonial.role}
+              onClick={() => setCurrentIndex(index)}
+              className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                index === currentIndex ? 'bg-sand w-6' : 'bg-gray-300'
+              }`}
+              aria-label={`Aller au témoignage ${index + 1}`}
             />
           ))}
         </div>

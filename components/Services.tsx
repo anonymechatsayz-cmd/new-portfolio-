@@ -117,22 +117,32 @@ const ServiceIllustration = ({ children }: { children: React.ReactNode }) => {
 };
 
 const ServiceCard = ({ Animation, title, description, features, index, color, progress, range, targetScale }: any) => {
-  const container = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: container,
-    offset: ['start end', 'start start']
-  });
+  const [isDesktop, setIsDesktop] = React.useState(false);
+
+  React.useEffect(() => {
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= 768);
+    };
+    
+    handleResize();
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const scale = useTransform(progress, range, [1, targetScale]);
 
   return (
-    <div ref={container} className="h-auto lg:h-[80vh] flex items-center justify-center relative lg:sticky lg:top-10">
+    <div 
+      className="h-auto md:min-h-[80vh] flex items-center justify-center relative md:sticky"
+      style={{ top: isDesktop ? '7rem' : '0' }}
+    >
       <motion.div 
         style={{ 
-          scale: typeof window !== 'undefined' && window.innerWidth >= 1024 ? scale : 1, 
-          top: typeof window !== 'undefined' && window.innerWidth >= 1024 ? `calc(-5vh + ${index * 25}px)` : 0 
+          scale: isDesktop ? scale : 1, 
+          top: isDesktop ? `${index * 20}px` : 0 
         }} 
-        className={`relative flex flex-col h-auto lg:min-h-[450px] w-full max-w-5xl rounded-[2.5rem] p-6 md:p-12 origin-top shadow-xl lg:shadow-2xl border border-white/10 overflow-hidden ${color} mb-8 lg:mb-0`}
+        className={`relative flex flex-col h-auto md:min-h-[450px] w-full max-w-5xl rounded-[2.5rem] p-6 md:p-12 origin-top shadow-xl md:shadow-2xl border border-white/10 overflow-hidden ${color} mb-8 md:mb-0 will-change-transform`}
       >
         {/* Noise Texture Overlay */}
         <div className="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] pointer-events-none mix-blend-overlay"></div>
@@ -197,7 +207,7 @@ export const Services = () => {
   ];
 
   return (
-    <section ref={container} id="services" className="bg-anthracite relative">
+    <section ref={container} id="services" className="bg-anthracite relative min-h-screen">
       <div className="container mx-auto px-6 py-32">
         <div className="mb-24 max-w-3xl mx-auto text-center">
           <span className="px-4 py-2 rounded-full border border-white/20 text-sm text-white/60 uppercase tracking-widest mb-6 inline-block">Mes Services</span>
@@ -209,7 +219,7 @@ export const Services = () => {
 
         <div className="mt-8 mb-24">
           {services.map((service, index) => {
-            const targetScale = 1 - ((services.length - index) * 0.05);
+            const targetScale = 1 - ((services.length - 1 - index) * 0.05);
             return (
               <ServiceCard 
                 key={index} 
@@ -223,10 +233,17 @@ export const Services = () => {
           })}
         </div>
 
-        <div className="flex justify-center">
-           <FluidButton href="#contact" className="px-12 py-5 text-lg font-bold min-w-[300px] text-anthracite" bgClass="bg-white">
-             Discuter de mon projet <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
-           </FluidButton>
+        <div className="flex justify-center relative z-20 px-4">
+           <div className="w-full md:w-auto">
+             <FluidButton 
+               href="#contact" 
+               className="w-full md:w-auto px-8 md:px-12 py-4 md:py-5 text-base md:text-lg font-bold md:min-w-[300px] text-anthracite flex items-center justify-center gap-3" 
+               bgClass="bg-white"
+             >
+               <span>Discuter de mon projet</span>
+               <ArrowRight className="w-5 h-5 md:w-6 md:h-6 group-hover:translate-x-1 transition-transform" />
+             </FluidButton>
+           </div>
         </div>
       </div>
     </section>

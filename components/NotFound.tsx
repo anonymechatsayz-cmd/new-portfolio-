@@ -31,11 +31,9 @@ export const NotFound = () => {
               Oups ! Il semblerait que vous vous soyez perdu dans le code. Cette page n'existe pas (ou plus).
             </p>
             
-            <Link href="/">
-              <a className="inline-flex items-center gap-3 px-8 py-4 bg-sand text-white rounded-full font-bold shadow-lg hover:bg-amber-600 hover:shadow-xl transition-all group">
-                <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-                Retour à l'accueil
-              </a>
+            <Link href="/" className="inline-flex items-center gap-3 px-8 py-4 bg-sand text-white rounded-full font-bold shadow-lg hover:bg-amber-600 hover:shadow-xl transition-all group">
+              <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+              Retour à l'accueil
             </Link>
           </div>
         </motion.div>
