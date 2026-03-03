@@ -45,10 +45,10 @@ export const Footer = () => {
               <span className="text-sand">ensemble.</span>
             </h2>
             <a 
-              href="mailto:contact@clementfranjou.fr" 
+              href="mailto:clement.franjou@gmail.com" 
               className="text-lg sm:text-2xl md:text-3xl text-gray-400 hover:text-white transition-colors flex items-center justify-center md:justify-start gap-2 sm:gap-4 group mb-8 break-all sm:break-normal"
             >
-              contact@clementfranjou.fr
+              clement.franjou@gmail.com
               <ArrowUpRight className="w-6 h-6 sm:w-8 sm:h-8 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform shrink-0" />
             </a>
             

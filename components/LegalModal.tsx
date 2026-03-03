@@ -29,7 +29,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({ isOpen, onClose, type })
           <p>Le Directeur de la publication du Site est Clément Franjou.</p>
 
           <h3 className="text-lg font-bold text-anthracite mt-6">Nous contacter</h3>
-          <p>Par email : contact@clementfranjou.fr</p>
+          <p>Par email : clement.franjou@gmail.com</p>
 
           <h3 className="text-lg font-bold text-anthracite mt-6">Données personnelles</h3>
           <p>Le traitement de vos données à caractère personnel est régi par notre Charte du respect de la vie privée, disponible depuis la section "Charte de Protection des Données Personnelles", conformément au Règlement Général sur la Protection des Données 2016/679 du 27 avril 2016 («RGPD»).</p>

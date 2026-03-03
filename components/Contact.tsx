@@ -1,51 +1,41 @@
-import React, { useState } from 'react';
-import { Mail, MapPin, Clock, Send, CheckCircle, ArrowRight, Calendar, Video, ArrowUpRight } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Mail, MapPin, Clock, Send, CheckCircle, ArrowRight, Calendar, Video, ArrowUpRight, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useForm, ValidationError } from '@formspree/react';
 import { BookingModal } from './BookingModal';
 
 export const Contact = () => {
-  const [formState, setFormState] = useState<'idle' | 'submitting' | 'success'>('idle');
+  // Utilisation de Formspree pour l'envoi d'email
+  // L'ID du formulaire doit être défini dans le fichier .env (VITE_FORMSPREE_FORM_ID)
+  // ou remplacé directement ici si vous n'utilisez pas de variables d'environnement
+  const [state, handleSubmit] = useForm(import.meta.env.VITE_FORMSPREE_FORM_ID || "YOUR_FORM_ID");
+  
   const [activeTab, setActiveTab] = useState<'form' | 'call'>('form');
   const [bookingModal, setBookingModal] = useState<{ isOpen: boolean; url: string }>({ isOpen: false, url: '' });
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [selectedType, setSelectedType] = useState('Refonte de site existant');
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setFormState('submitting');
-    
-    // Récupération des données du formulaire
-    const form = e.target as HTMLFormElement;
-    const name = (form.elements.namedItem('name') as HTMLInputElement).value;
-    const email = (form.elements.namedItem('email') as HTMLInputElement).value;
-    const type = (form.elements.namedItem('type') as HTMLSelectElement).value;
-    const message = (form.elements.namedItem('message') as HTMLTextAreaElement).value;
-
-    // Construction du lien mailto
-    const subject = `Nouveau projet : ${type} - ${name}`;
-    const body = `Nom: ${name}%0D%0AEmail: ${email}%0D%0AProjet: ${type}%0D%0A%0D%0AMessage:%0D%0A${message}`;
-    
-    // Simulation d'envoi pour l'UX (puis ouverture du client mail)
-    setTimeout(() => {
-      window.location.href = `mailto:contact@clementfranjou.fr?subject=${encodeURIComponent(subject)}&body=${body}`;
-      setFormState('success');
-    }, 1000);
-  };
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const openBooking = (type: 'discovery' | 'audit') => {
     // URLs de démo Calendly (à remplacer par les vôtres)
     const urls = {
-      discovery: "https://calendly.com/clement-franjou/decouverte", // Placeholder
-      audit: "https://calendly.com/clement-franjou/audit" // Placeholder
+      discovery: "https://calendly.com/clement-franjou/30min", 
+      audit: "https://calendly.com/clement-franjou/30min" 
     };
-    
-    // Fallback vers une page de démo générique si pas de lien perso
-    const demoUrl = "https://calendly.com/assets/external/widget.js"; 
-    // Note: Pour la démo technique, on va utiliser une URL qui charge quelque chose de visuel, 
-    // mais idéalement ce serait votre vrai lien Calendly.
-    // Ici j'utilise un lien générique pour l'exemple.
     
     setBookingModal({ 
       isOpen: true, 
-      url: "https://calendly.com/clement-franjou" // Remplacer par votre URL réelle
+      url: urls[type] 
     });
   };
 
@@ -71,7 +61,7 @@ export const Contact = () => {
                 </div>
                 <div className="min-w-0">
                   <div className="text-xs md:text-sm text-gray-500 uppercase tracking-wider mb-1">Email</div>
-                  <div className="text-lg md:text-xl font-medium break-all sm:break-normal">contact@clementfranjou.fr</div>
+                  <div className="text-lg md:text-xl font-medium break-all sm:break-normal">clement.franjou@gmail.com</div>
                 </div>
               </div>
               
@@ -97,7 +87,7 @@ export const Contact = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-3xl p-6 md:p-12 text-anthracite shadow-2xl min-h-[600px] md:min-h-[750px] flex flex-col">
+          <div className="bg-white rounded-3xl p-6 md:p-12 text-anthracite shadow-2xl min-h-[700px] md:min-h-[850px] flex flex-col">
             {/* Toggle Switch */}
             <div className="flex justify-center mb-8 md:mb-10">
               <div className="bg-paper p-1.5 rounded-full inline-flex relative shadow-inner w-full sm:w-auto" role="tablist" aria-label="Type de contact">
@@ -146,7 +136,7 @@ export const Contact = () => {
                   transition={{ duration: 0.3 }}
                   className="flex-grow flex flex-col justify-center"
                 >
-                  {formState === 'success' ? (
+                  {state.succeeded ? (
                     <div className="h-full flex flex-col items-center justify-center text-center animate-fade-in py-12">
                       <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mb-6">
                         <CheckCircle className="w-12 h-12 text-green-600" />
@@ -156,7 +146,7 @@ export const Contact = () => {
                         Merci de votre intérêt. Je reviens vers vous très rapidement (sous 24h).
                       </p>
                       <button 
-                        onClick={() => setFormState('idle')}
+                        onClick={() => window.location.reload()} 
                         className="text-[#5D7285] font-bold hover:underline flex items-center gap-2"
                       >
                         Envoyer un autre message <ArrowRight className="w-4 h-4" />
@@ -175,13 +165,15 @@ export const Contact = () => {
                           transition={{ duration: 0.2 }}
                           type="text" 
                           id="name" 
+                          name="name"
                           required
                           className="w-full px-4 py-4 rounded-xl bg-paper border border-gray-200 outline-none transition-all"
                           placeholder="Jean Dupont"
                         />
+                        <ValidationError prefix="Name" field="name" errors={state.errors} className="text-red-500 text-sm mt-1" />
                       </div>
                       <div>
-                        <label htmlFor="email" className="block text-sm font-bold text-anthracite mb-2 uppercase tracking-wide">Email professionnel</label>
+                        <label htmlFor="email" className="block text-sm font-bold text-anthracite mb-2 uppercase tracking-wide">Email</label>
                         <motion.input 
                           whileFocus={{ 
                             scale: 1.01, 
@@ -191,34 +183,55 @@ export const Contact = () => {
                           transition={{ duration: 0.2 }}
                           type="email" 
                           id="email" 
+                          name="email"
                           required
                           className="w-full px-4 py-4 rounded-xl bg-paper border border-gray-200 outline-none transition-all"
-                          placeholder="jean@entreprise.com"
+                          placeholder="jean@gmail.com"
                         />
+                        <ValidationError prefix="Email" field="email" errors={state.errors} className="text-red-500 text-sm mt-1" />
                       </div>
-                      <div>
-                        <label htmlFor="type" className="block text-sm font-bold text-anthracite mb-2 uppercase tracking-wide">Type de projet</label>
-                        <div className="relative">
-                          <motion.select 
-                            whileFocus={{ 
-                              scale: 1.01, 
-                              borderColor: "#D4A574",
-                              boxShadow: "0 0 0 4px rgba(212, 165, 116, 0.1)" 
-                            }}
-                            transition={{ duration: 0.2 }}
-                            id="type"
-                            className="w-full px-4 py-4 rounded-xl bg-paper border border-gray-200 outline-none transition-all appearance-none"
-                          >
-                            <option>Site Vitrine (Artisan/PME)</option>
-                            <option>Site Restaurant</option>
-                            <option>Profession Libérale</option>
-                            <option>Refonte de site existant</option>
-                            <option>Autre</option>
-                          </motion.select>
-                          <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                            <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
-                          </div>
-                        </div>
+                      <div className="relative" ref={dropdownRef}>
+                        <label className="block text-sm font-bold text-anthracite mb-2 uppercase tracking-wide">Type de projet</label>
+                        <input type="hidden" name="type" value={selectedType} />
+                        <button
+                          type="button"
+                          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                          className={`w-full px-4 py-4 rounded-xl bg-paper border outline-none transition-all text-left flex items-center justify-between ${
+                            isDropdownOpen ? 'border-[#D4A574] ring-4 ring-[#D4A574]/10' : 'border-gray-200'
+                          }`}
+                        >
+                          <span className="text-anthracite">{selectedType}</span>
+                          <ChevronDown className={`w-5 h-5 text-gray-500 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} />
+                        </button>
+                        
+                        <AnimatePresence>
+                          {isDropdownOpen && (
+                            <motion.div
+                              initial={{ opacity: 0, y: -10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: -10 }}
+                              transition={{ duration: 0.2 }}
+                              className="absolute z-50 w-full mt-2 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden"
+                            >
+                              {['Création de site', 'Refonte de site existant', 'Landing Page', 'Autre'].map((type) => (
+                                <button
+                                  key={type}
+                                  type="button"
+                                  onClick={() => {
+                                    setSelectedType(type);
+                                    setIsDropdownOpen(false);
+                                  }}
+                                  className={`w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors flex items-center justify-between ${
+                                    selectedType === type ? 'bg-gray-50 font-medium text-anthracite' : 'text-gray-600'
+                                  }`}
+                                >
+                                  {type}
+                                  {selectedType === type && <CheckCircle className="w-4 h-4 text-sand" />}
+                                </button>
+                              ))}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
                       </div>
                       <div>
                         <label htmlFor="message" className="block text-sm font-bold text-anthracite mb-2 uppercase tracking-wide">Message</label>
@@ -230,30 +243,31 @@ export const Contact = () => {
                           }}
                           transition={{ duration: 0.2 }}
                           id="message" 
+                          name="message"
                           rows={4}
                           required
                           className="w-full px-4 py-4 rounded-xl bg-paper border border-gray-200 outline-none transition-all resize-none"
                           placeholder="Parlez-moi de votre activité et de vos objectifs..."
                         ></motion.textarea>
+                        <ValidationError prefix="Message" field="message" errors={state.errors} className="text-red-500 text-sm mt-1" />
                       </div>
                       <motion.button 
                         type="submit"
-                        disabled={formState === 'submitting'}
+                        disabled={state.submitting}
                         initial="idle"
-                        whileHover={formState !== 'submitting' ? "hover" : undefined}
-                        whileTap={formState !== 'submitting' ? "tap" : undefined}
+                        whileHover={!state.submitting ? "hover" : undefined}
+                        whileTap={!state.submitting ? "tap" : undefined}
                         variants={{
                           idle: { scale: 1 },
                           hover: { 
                             scale: 1.02,
-                            backgroundColor: "#4A5B6B",
                             boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
                           },
                           tap: { scale: 0.98 }
                         }}
-                        className="w-full py-5 bg-[#5D7285] text-white rounded-xl font-bold text-lg transition-all shadow-lg flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed overflow-hidden"
+                        className="w-full py-5 bg-anthracite hover:bg-gray-800 text-white rounded-xl font-bold text-lg transition-all duration-300 shadow-lg flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed overflow-hidden"
                       >
-                        {formState === 'submitting' ? (
+                        {state.submitting ? (
                           <span>Envoi en cours...</span>
                         ) : (
                           <>

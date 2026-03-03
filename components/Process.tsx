@@ -3,7 +3,35 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { Search, FileText, Code, Rocket, ArrowRight } from 'lucide-react';
 import { FluidButton } from './FluidButton';
 
-const Step = ({ icon: Icon, number, title, description, isLast }: any) => {
+const Step = ({ icon: Icon, number, title, description, isLast, scrollYProgress, index, totalSteps }: any) => {
+  // Calculate trigger point based on index relative to total steps
+  // This assumes steps are roughly equal height.
+  // Example for 4 steps: 0, 0.25, 0.5, 0.75
+  const stepProgress = index / totalSteps;
+  
+  // Start animating slightly before the line reaches the icon center to feel responsive
+  // and finish slightly after.
+  const start = stepProgress;
+  const end = Math.min(1, stepProgress + 0.15);
+
+  const borderColor = useTransform(
+    scrollYProgress,
+    [start, end],
+    ["#F3F4F6", "#D4A574"] // gray-100 -> sand
+  );
+
+  const iconColor = useTransform(
+    scrollYProgress,
+    [start, end],
+    ["#9CA3AF", "#D4A574"] // gray-400 -> sand
+  );
+
+  const scale = useTransform(
+    scrollYProgress,
+    [start, end],
+    [1, 1.1]
+  );
+
   return (
     <motion.div 
       initial={{ opacity: 0, x: 20 }}
@@ -13,9 +41,17 @@ const Step = ({ icon: Icon, number, title, description, isLast }: any) => {
       className="relative pl-16 md:pl-24 pb-16 last:pb-0 group"
     >
       {/* Timeline Node */}
-      <div className="absolute left-0 top-0 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white border-2 border-gray-100 z-10 flex items-center justify-center shadow-sm group-hover:border-sand group-hover:scale-110 transition-all duration-300">
-        <Icon className="w-5 h-5 md:w-6 md:h-6 text-gray-400 group-hover:text-sand transition-colors" />
-      </div>
+      <motion.div 
+        style={{ 
+          borderColor,
+          scale
+        }}
+        className="absolute left-0 top-0 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white border-2 z-10 flex items-center justify-center shadow-sm transition-shadow duration-300"
+      >
+        <motion.div style={{ color: iconColor }}>
+          <Icon className="w-5 h-5 md:w-6 md:h-6 transition-colors" />
+        </motion.div>
+      </motion.div>
 
       {/* Card Content */}
       <div className="bg-white p-6 md:p-8 rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:border-sand/30 transition-all duration-300 relative overflow-hidden group-hover:-translate-y-1">
@@ -138,6 +174,9 @@ export const Process = () => {
                   key={index}
                   {...step}
                   isLast={index === steps.length - 1}
+                  scrollYProgress={scrollYProgress}
+                  index={index}
+                  totalSteps={steps.length}
                 />
               ))}
             </div>
