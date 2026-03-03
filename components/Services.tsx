@@ -185,22 +185,22 @@ export const Services = () => {
   const services = [
     {
       Animation: MonitorAnimation,
-      title: "Design & Expérience",
-      description: "Une interface qui capte l'attention instantanément. Je conçois des designs uniques qui reflètent votre identité tout en guidant l'utilisateur vers l'achat.",
-      features: ["UI/UX Design", "Maquettes", "Mobile First", "Identité Visuelle"],
+      title: "Image de Marque Mémorable",
+      description: "Une interface qui capte l'attention instantanément. Alliant Design & Expérience, je conçois des interfaces uniques (UI/UX) qui reflètent votre identité tout en guidant l'utilisateur vers l'achat.",
+      features: ["Design Premium", "Maquettes", "Mobile First", "Identité Visuelle"],
       color: "bg-gradient-to-br from-[#1E293B] to-[#0F172A]" 
     },
     {
       Animation: RocketAnimation,
-      title: "Développement Next.js",
-      description: "La technologie utilisée par les leaders (Netflix, TikTok). Votre site sera ultra-rapide, sécurisé et parfaitement fluide. Fini les temps de chargement interminables.",
-      features: ["Performance 95+", "Sécurité", "Animations", "Évolutif"],
+      title: "Performance & Rapidité Absolue",
+      description: "Expert en Développement Next.js. Votre site sera ultra-rapide, sécurisé et parfaitement fluide. Une infrastructure robuste pour un ROI maximal.",
+      features: ["Performance 95+", "Sécurité Totale", "Animations", "Évolutif"],
       color: "bg-gradient-to-br from-[#0F172A] to-[#020617]"
     },
     {
       Animation: SearchAnimation,
-      title: "SEO & Croissance",
-      description: "Un beau site ne suffit pas, il doit être vu. J'optimise chaque ligne de code pour que Google vous adore et que vos visiteurs deviennent des clients.",
+      title: "Visibilité & Acquisition",
+      description: "Un beau site ne suffit pas, il doit être vu. Je combine SEO & Croissance pour que Google vous adore et que vos visiteurs deviennent des clients fidèles.",
       features: ["Audit SEO", "Mots-clés", "Analytics", "Conversion"],
       color: "bg-gradient-to-br from-[#020617] to-black" 
     }
@@ -233,17 +233,10 @@ export const Services = () => {
           })}
         </div>
 
-        <div className="flex justify-center relative z-20 px-4">
-           <div className="w-full md:w-auto">
-             <FluidButton 
-               href="#contact" 
-               className="w-full md:w-auto px-8 md:px-12 py-4 md:py-5 text-base md:text-lg font-bold md:min-w-[300px] text-anthracite flex items-center justify-center gap-3" 
-               bgClass="bg-white"
-             >
-               <span>Discuter de mon projet</span>
-               <ArrowRight className="w-5 h-5 md:w-6 md:h-6 group-hover:translate-x-1 transition-transform" />
-             </FluidButton>
-           </div>
+        <div className="flex justify-center relative z-20 mt-16">
+           <FluidButton href="#contact" className="px-8 py-4 text-anthracite" bgClass="bg-white">
+             Discuter de mon projet <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+           </FluidButton>
         </div>
       </div>
     </section>

@@ -20,11 +20,12 @@ const ScrollingWord = () => {
       <AnimatePresence mode="popLayout">
         <motion.span
           key={index}
-          initial={{ y: "110%" }}
-          animate={{ y: "0%" }}
-          exit={{ y: "-110%" }}
+          initial={{ y: "100%", opacity: 0, filter: "blur(8px)" }}
+          animate={{ y: "0%", opacity: 1, filter: "blur(0px)" }}
+          exit={{ y: "-100%", opacity: 0, filter: "blur(8px)" }}
           transition={{ 
-            y: { duration: 0.8, ease: [0.16, 1, 0.3, 1] }, // Apple-style smooth ease
+            duration: 0.8, 
+            ease: [0.16, 1, 0.3, 1] // Apple-style smooth ease
           }}
           className="block text-sand whitespace-nowrap absolute top-0 left-0 right-0 text-center md:text-left"
         >
@@ -106,9 +107,9 @@ export const Hero = () => {
 
           <motion.p
             variants={itemVariants}
-            className="text-lg md:text-xl text-gray-600 max-w-2xl mb-10 leading-relaxed text-balance"
+            className="text-lg md:text-xl text-gray-600 max-w-2xl mb-10 leading-relaxed"
           >
-            Spécialiste Next.js pour artisans et&nbsp;PME. <br className="hidden md:block" />
+            Spécialiste Web pour PME. <br />
             <span className="text-anthracite font-semibold">Site livré en 7 jours. Résultats&nbsp;garantis.</span>
           </motion.p>
 

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Quote, Star, BadgeCheck, ChevronLeft, ChevronRight } from 'lucide-react';
-import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 const testimonials = [
   {
@@ -73,17 +73,27 @@ const TestimonialCard: React.FC<{ quote: string, author: string, role: string, c
 
 export const Testimonials = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
-  const handleDragEnd = (event: any, info: any) => {
-    const threshold = 50;
-    if (info.offset.x < -threshold) {
-      if (currentIndex < testimonials.length - 1) {
-        setCurrentIndex(currentIndex + 1);
+  const handleScroll = () => {
+    if (scrollRef.current) {
+      const scrollLeft = scrollRef.current.scrollLeft;
+      const width = scrollRef.current.offsetWidth;
+      const newIndex = Math.round(scrollLeft / width);
+      if (newIndex !== currentIndex) {
+        setCurrentIndex(newIndex);
       }
-    } else if (info.offset.x > threshold) {
-      if (currentIndex > 0) {
-        setCurrentIndex(currentIndex - 1);
-      }
+    }
+  };
+
+  const scrollToTestimonial = (index: number) => {
+    if (scrollRef.current) {
+      const width = scrollRef.current.offsetWidth;
+      scrollRef.current.scrollTo({
+        left: index * width,
+        behavior: 'smooth'
+      });
+      setCurrentIndex(index);
     }
   };
 
@@ -119,42 +129,35 @@ export const Testimonials = () => {
 
       {/* Mobile View - Swipe Carousel */}
       <div className="md:hidden px-6">
-        <div className="relative overflow-hidden min-h-[400px]">
-          <motion.div
-            className="flex touch-pan-y"
-            style={{ width: `${testimonials.length * 100}%` }}
-            drag="x"
-            dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={0.2}
-            onDragEnd={handleDragEnd}
-            animate={{ x: `-${currentIndex * (100 / testimonials.length)}%` }}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          >
-            {testimonials.map((testimonial, index) => (
-              <div 
-                key={index} 
-                className="flex-shrink-0 px-2 h-full"
-                style={{ width: `${100 / testimonials.length}%` }}
-              >
-                <TestimonialCard 
-                  quote={testimonial.quote}
-                  author={testimonial.author}
-                  role={testimonial.role}
-                  className="h-full"
-                />
-              </div>
-            ))}
-          </motion.div>
+        <div 
+          ref={scrollRef}
+          className="flex overflow-x-auto snap-x snap-mandatory pb-4 -mx-6 px-6 [&::-webkit-scrollbar]:hidden"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          onScroll={handleScroll}
+        >
+          {testimonials.map((testimonial, index) => (
+            <div 
+              key={index} 
+              className="w-full flex-shrink-0 snap-center px-2"
+            >
+              <TestimonialCard 
+                quote={testimonial.quote}
+                author={testimonial.author}
+                role={testimonial.role}
+                className="h-full"
+              />
+            </div>
+          ))}
         </div>
 
         {/* Mobile Navigation Dots */}
-        <div className="flex justify-center gap-2 mt-6">
+        <div className="flex justify-center gap-2 mt-4">
           {testimonials.map((_, index) => (
             <button
               key={index}
-              onClick={() => setCurrentIndex(index)}
-              className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                index === currentIndex ? 'bg-sand w-6' : 'bg-gray-300'
+              onClick={() => scrollToTestimonial(index)}
+              className={`h-2 rounded-full transition-all duration-300 ${
+                index === currentIndex ? 'bg-sand w-8' : 'bg-gray-200 w-2'
               }`}
               aria-label={`Aller au témoignage ${index + 1}`}
             />

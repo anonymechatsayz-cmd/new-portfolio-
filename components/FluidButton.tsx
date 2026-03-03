@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { motion, useMotionTemplate, useMotionValue, useSpring } from 'framer-motion';
 
 interface FluidButtonProps {
@@ -16,9 +16,15 @@ export const FluidButton = ({ children, onClick, className = "", href, bgClass }
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  // Smooth springs for the spotlight effect
-  const smoothX = useSpring(mouseX, { stiffness: 150, damping: 20 });
-  const smoothY = useSpring(mouseY, { stiffness: 150, damping: 20 });
+  // "Dopamine" Physics: Light, Fluid, Aesthetic Bounce
+  // Mass 0.5 makes it feel lightweight.
+  // Stiffness 250 makes it responsive but not jittery.
+  // Damping 18 allows a subtle, satisfying overshoot (bounce) that settles quickly.
+  const springConfig = { damping: 18, stiffness: 250, mass: 0.5 };
+  const springX = useSpring(mouseX, springConfig);
+  const springY = useSpring(mouseY, springConfig);
+
+  const [isHovered, setIsHovered] = useState(false);
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!ref.current) return;
@@ -33,38 +39,48 @@ export const FluidButton = ({ children, onClick, className = "", href, bgClass }
       href={href}
       onClick={onClick}
       onMouseMove={handleMouseMove}
-      className={`relative overflow-hidden group rounded-full font-medium tracking-wide shadow-sm hover:shadow-xl transition-shadow duration-500 ${className || "px-8 py-4 text-white"}`}
-      whileHover={{ scale: 1.02, y: -1 }}
-      whileTap={{ scale: 0.97, y: 1 }}
-      transition={{ type: "spring", stiffness: 400, damping: 25 }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className={`relative overflow-hidden group rounded-full font-bold shadow-lg hover:shadow-sand/20 transition-all duration-300 border border-white/10 ${className || "px-8 py-4 text-white"}`}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
     >
-      {/* Base Background - Restored to original/theme color */}
-      <div className={`absolute inset-0 z-0 ${bgClass || "bg-anthracite"}`} />
+      {/* Base Background */}
+      <div className={`absolute inset-0 z-0 ${bgClass || "bg-gradient-to-br from-gray-800 to-[#1a1d29]"}`} />
       
-      {/* Wave Effect - Liquid fill on hover */}
-      <motion.div
-        className="absolute left-1/2 top-full w-[300%] h-[300%] -translate-x-1/2 bg-petrol rounded-[40%] z-0"
-        animate={{ rotate: 360 }}
-        transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-        whileHover={{ top: "-150%" }} // Moves up to fill the button
-      />
-
-      {/* Organic Spotlight - Subtle lighting */}
+      {/* Interactive Fluid Gradient - "Alive" Feel */}
       <motion.div 
-        className="absolute inset-0 z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+        className="absolute inset-0 z-0 transition-opacity duration-300"
         style={{
+          opacity: isHovered ? 1 : 0.4, 
           background: useMotionTemplate`
             radial-gradient(
-              350px circle at ${smoothX}px ${smoothY}px,
-              rgba(255, 255, 255, 0.1) 0%,
-              transparent 80%
+              120% 120% at ${springX}px ${springY}px,
+              rgba(255, 255, 255, 0.15) 0%, 
+              rgba(212, 165, 116, 0.1) 30%,
+              rgba(255, 255, 255, 0) 100%
             )
           `
         }}
       />
 
-      {/* Content - Kept white for contrast */}
-      <span className="relative z-10 flex items-center justify-center gap-3 text-white">
+      {/* Silver Shimmer Wave Effect - Premium Polish */}
+      <motion.div
+        className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12"
+        initial={{ x: "-100%" }}
+        animate={isHovered ? { x: "200%" } : { x: "-100%" }}
+        transition={{
+          x: {
+            duration: isHovered ? 1.5 : 0,
+            ease: "linear",
+            repeat: isHovered ? Infinity : 0,
+            repeatDelay: 0.8
+          }
+        }}
+      />
+
+      {/* Content */}
+      <span className="relative z-20 flex items-center justify-center gap-2 tracking-wide">
         {children}
       </span>
     </Component>

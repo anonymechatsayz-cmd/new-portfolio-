@@ -92,13 +92,30 @@ export const Process = () => {
               <motion.div 
                 whileHover={{ scale: 1.05, rotate: 1 }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                className="bg-anthracite text-white p-8 rounded-2xl relative overflow-hidden inline-block text-left w-full max-w-md lg:max-w-none mx-auto lg:mx-0 cursor-default shadow-xl"
+                className="bg-anthracite text-white p-8 rounded-2xl relative overflow-hidden inline-block text-left w-full max-w-md lg:max-w-none mx-auto lg:mx-0 cursor-default shadow-xl mb-6"
               >
                 <div className="absolute top-0 right-0 w-32 h-32 bg-petrol rounded-full blur-[50px] opacity-50 -translate-y-1/2 translate-x-1/2"></div>
                 <div className="relative z-10">
                   <div className="text-6xl font-bold text-sand mb-2">7</div>
                   <div className="text-2xl font-bold mb-2">Jours ouvrés</div>
                   <p className="text-gray-400">C'est le temps moyen entre la validation du devis et la mise en ligne de votre site.</p>
+                </div>
+              </motion.div>
+
+              <motion.div 
+                whileHover={{ scale: 1.02 }}
+                className="bg-white border border-gray-200 p-6 rounded-2xl relative overflow-hidden inline-block text-left w-full max-w-md lg:max-w-none mx-auto lg:mx-0 shadow-sm"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="bg-green-100 p-2 rounded-full">
+                    <Rocket className="w-6 h-6 text-green-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-anthracite text-lg mb-1">Garantie Zéro Risque</h3>
+                    <p className="text-gray-600 text-sm leading-relaxed">
+                      Paiement à la livraison. Vous ne réglez le solde que lorsque votre site est en ligne et que vous êtes 100% satisfait.
+                    </p>
+                  </div>
                 </div>
               </motion.div>
             </motion.div>
@@ -130,18 +147,11 @@ export const Process = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="pl-16 md:pl-24 mt-8 flex justify-start pr-6 md:pr-0"
+              className="pl-16 md:pl-24 mt-8 flex justify-start"
             >
-              <div className="w-full md:w-auto">
-                <FluidButton 
-                  href="#contact" 
-                  className="w-full md:w-auto px-6 md:px-8 py-4 text-base md:text-lg font-bold text-white flex items-center justify-center gap-3" 
-                  bgClass="bg-sand"
-                >
-                  <span>Démarrer l'audit gratuit</span>
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </FluidButton>
-              </div>
+              <FluidButton href="#contact" className="px-8 py-4 text-white" bgClass="bg-sand">
+                Démarrer l'audit gratuit <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </FluidButton>
             </motion.div>
           </div>
 

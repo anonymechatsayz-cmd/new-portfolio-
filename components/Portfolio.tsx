@@ -151,7 +151,7 @@ const Project: React.FC<ProjectProps> = ({ project, index, onOpen }) => {
 
         <button 
           onClick={onOpen}
-          className="flex items-center gap-2 text-[#5D7285] font-bold hover:text-sand hover:gap-4 transition-all group/btn"
+          className="cursor-pointer flex items-center gap-2 text-[#5D7285] font-bold hover:text-sand hover:gap-4 transition-all group/btn"
         >
           Voir l'étude de cas <ArrowUpRight className="w-5 h-5 group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform" />
         </button>
@@ -182,17 +182,15 @@ export const Portfolio = () => {
           ))}
         </div>
 
-        <div className="flex justify-center px-4">
-          <div className="w-full md:w-auto">
+        <div className="flex justify-center mt-16">
             <FluidButton 
               href="#contact" 
-              className="w-full md:w-auto px-8 py-4 text-base md:text-lg font-bold text-white flex items-center justify-center gap-3" 
+              className="px-8 py-4 text-white flex items-center justify-center gap-3" 
               bgClass="bg-anthracite"
             >
               <span>Obtenir un résultat similaire</span>
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </FluidButton>
-          </div>
         </div>
       </div>
 
