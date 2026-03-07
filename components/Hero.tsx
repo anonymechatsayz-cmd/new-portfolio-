@@ -4,10 +4,10 @@ import { ArrowRight, CheckCircle2, TrendingUp, Headphones, ArrowUpRight, Rocket,
 import { InteractiveBackground } from './InteractiveBackground';
 import { FluidButton } from './FluidButton';
 
-// Shared glassmorphism styles
+// Apple-style glassmorphism
 const glassStyles = {
-  base: "bg-white/60 backdrop-blur-xl border border-white/80 shadow-[0_2px_20px_-4px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.8)]",
-  hover: "hover:bg-white/75 hover:shadow-[0_4px_24px_-4px_rgba(194,156,96,0.15),inset_0_1px_0_rgba(255,255,255,0.9)] hover:border-sand/20",
+  base: "bg-white/50 backdrop-blur-2xl border border-white/60 shadow-[0_4px_32px_-8px_rgba(0,0,0,0.12),0_0_0_0.5px_rgba(255,255,255,0.6)_inset]",
+  hover: "hover:bg-white/65 hover:shadow-[0_8px_40px_-8px_rgba(0,0,0,0.15),0_0_0_0.5px_rgba(255,255,255,0.8)_inset]",
 };
 
 const ScrollingWord = () => {
@@ -171,12 +171,11 @@ export const Hero = () => {
             
             <motion.a
               href="#services"
-              whileHover={prefersReducedMotion ? undefined : { scale: 1.03 }}
-              whileTap={prefersReducedMotion ? undefined : { scale: 0.97 }}
-              className={`px-8 py-4 rounded-full font-medium text-lg flex items-center gap-2 w-full sm:w-auto justify-center text-anthracite ${glassStyles.base} ${glassStyles.hover} transition-all duration-300 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sand focus-visible:ring-offset-2 focus-visible:ring-offset-cream`}
+              whileHover={prefersReducedMotion ? undefined : { scale: 1.02 }}
+              whileTap={prefersReducedMotion ? undefined : { scale: 0.98 }}
+              className="group relative px-8 py-4 rounded-full font-medium text-lg flex items-center gap-2 w-full sm:w-auto justify-center text-anthracite/80 bg-white/40 backdrop-blur-2xl border border-white/50 shadow-[0_2px_24px_-4px_rgba(0,0,0,0.08),0_0_0_0.5px_rgba(255,255,255,0.5)_inset] hover:bg-white/55 hover:text-anthracite hover:shadow-[0_4px_32px_-4px_rgba(0,0,0,0.1),0_0_0_0.5px_rgba(255,255,255,0.7)_inset] hover:border-white/70 transition-all duration-500 ease-out motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sand/50 focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
             >
               Decouvrir mes services
-              <ArrowRight className="w-4 h-4 text-sand opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 motion-reduce:opacity-100 motion-reduce:translate-x-0" aria-hidden="true" />
             </motion.a>
           </motion.div>
 
