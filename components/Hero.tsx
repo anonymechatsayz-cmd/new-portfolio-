@@ -16,24 +16,27 @@ const ScrollingWord = () => {
   }, []);
 
   return (
-    <div className="h-[1.2em] overflow-hidden inline-flex flex-col justify-start align-top relative min-w-[2ch] text-[1.1em] align-middle px-1">
-      <AnimatePresence mode="popLayout">
-        <motion.span
-          key={index}
-          initial={{ y: "100%", opacity: 0, filter: "blur(8px)" }}
-          animate={{ y: "0%", opacity: 1, filter: "blur(0px)" }}
-          exit={{ y: "-100%", opacity: 0, filter: "blur(8px)" }}
-          transition={{ 
-            duration: 0.8, 
-            ease: [0.16, 1, 0.3, 1]
-          }}
-          className="block text-sand whitespace-nowrap absolute top-0 left-0 right-0 text-center md:text-left"
-        >
-          {words[index]}.
-        </motion.span>
-      </AnimatePresence>
-      <span className="opacity-0 px-1">{words.reduce((a, b) => a.length > b.length ? a : b)}.</span>
-    </div>
+    <span className="relative inline-block">
+      <span className="absolute -inset-x-4 -inset-y-2 bg-gradient-to-r from-sand/15 via-sand/10 to-transparent blur-2xl rounded-full" />
+      <span className="relative h-[1.2em] overflow-hidden inline-flex flex-col justify-start align-top min-w-[2ch] text-[1.1em] align-middle">
+        <AnimatePresence mode="popLayout">
+          <motion.span
+            key={index}
+            initial={{ y: "100%", opacity: 0, filter: "blur(8px)", scale: 0.95 }}
+            animate={{ y: "0%", opacity: 1, filter: "blur(0px)", scale: 1 }}
+            exit={{ y: "-100%", opacity: 0, filter: "blur(8px)", scale: 0.95 }}
+            transition={{ 
+              duration: 0.8, 
+              ease: [0.16, 1, 0.3, 1]
+            }}
+            className="block text-transparent bg-clip-text bg-gradient-to-r from-sand via-amber-500 to-sand whitespace-nowrap absolute top-0 left-0 right-0 text-center md:text-left"
+          >
+            {words[index]}.
+          </motion.span>
+        </AnimatePresence>
+        <span className="opacity-0">{words.reduce((a, b) => a.length > b.length ? a : b)}.</span>
+      </span>
+    </span>
   );
 };
 
@@ -85,16 +88,20 @@ export const Hero = () => {
           <motion.a
             href="#contact"
             variants={itemVariants}
-            whileHover={{ scale: 1.03 }}
+            whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="group inline-flex items-center gap-3 mb-8 px-5 py-2.5 bg-white/90 backdrop-blur-md rounded-full shadow-lg shadow-black/[0.03] border border-stone-200/60 cursor-pointer transition-all duration-300 hover:shadow-xl hover:shadow-sand/10 hover:border-sand/30"
+            className="group relative inline-flex items-center gap-2.5 mb-10 px-4 py-2 cursor-pointer"
           >
+            {/* Glassmorphism background */}
+            <div className="absolute inset-0 bg-white/70 backdrop-blur-xl rounded-full border border-white/80 shadow-[0_2px_20px_-4px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.8)] group-hover:bg-white/80 group-hover:shadow-[0_4px_24px_-4px_rgba(194,156,96,0.2),inset_0_1px_0_rgba(255,255,255,0.9)] group-hover:border-sand/20 transition-all duration-500" />
+            
+            {/* Content */}
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500 shadow-sm shadow-emerald-500/50"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-60"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500 shadow-[0_0_8px_2px_rgba(16,185,129,0.4)]"></span>
             </span>
-            <span className="text-[10px] md:text-xs font-semibold text-anthracite/80 uppercase tracking-[0.12em]">Disponible pour nouveaux projets</span>
-            <ArrowRight className="w-3.5 h-3.5 text-sand opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
+            <span className="relative text-[11px] md:text-xs font-semibold text-anthracite/70 uppercase tracking-[0.1em] group-hover:text-anthracite/90 transition-colors duration-300">Disponible pour nouveaux projets</span>
+            <ArrowRight className="relative w-3.5 h-3.5 text-sand/60 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 group-hover:text-sand transition-all duration-300" />
           </motion.a>
 
           <motion.h1
