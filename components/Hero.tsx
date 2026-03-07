@@ -221,22 +221,23 @@ export const Hero = () => {
             </motion.div>
           </motion.div>
 
-          {/* Scroll Indicator */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 2, duration: 1 }}
-            className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden md:flex flex-col items-center gap-2 motion-reduce:hidden"
-            aria-hidden="true"
-          >
-            <motion.div
-              animate={{ y: [0, 6, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-              className={`w-6 h-10 rounded-full flex items-start justify-center p-1.5 ${glassStyles.base}`}
-            >
-              <div className="w-1.5 h-2.5 bg-sand/60 rounded-full" />
-            </motion.div>
-          </motion.div>
+        </motion.div>
+      </motion.div>
+
+      {/* Scroll Indicator - positioned outside the parallax container */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 2.5, duration: 1 }}
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 hidden md:flex flex-col items-center gap-2 motion-reduce:hidden"
+        aria-hidden="true"
+      >
+        <motion.div
+          animate={{ y: [0, 6, 0] }}
+          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+          className="w-7 h-11 rounded-full flex items-start justify-center p-2 bg-white/30 backdrop-blur-xl border border-white/40 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.1)]"
+        >
+          <div className="w-1.5 h-3 bg-anthracite/40 rounded-full" />
         </motion.div>
       </motion.div>
     </section>
