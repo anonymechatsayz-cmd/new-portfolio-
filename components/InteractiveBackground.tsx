@@ -1,18 +1,22 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, memo } from 'react';
 
-export const InteractiveBackground = () => {
+export const InteractiveBackground = memo(() => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouseRef = useRef({ x: -1000, y: -1000 });
+  const isVisibleRef = useRef(true);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { alpha: true });
     if (!ctx) return;
 
     let animationFrameId: number;
     let particles: Particle[] = [];
+    let lastTime = 0;
+    const targetFPS = 60;
+    const frameInterval = 1000 / targetFPS;
 
     const colors = [
       'rgba(26, 29, 41, 0.4)',   // Anthracite
@@ -32,80 +36,83 @@ export const InteractiveBackground = () => {
       constructor(w: number, h: number) {
         this.x = Math.random() * w;
         this.y = Math.random() * h;
-        this.depth = Math.random(); // 0 to 1, used for parallax and size
-        
-        // Closer particles are larger and faster
+        this.depth = Math.random();
         this.size = (Math.random() * 2 + 0.5) * (this.depth + 0.5); 
         this.vx = (Math.random() - 0.5) * 0.1 * (this.depth + 0.5);
         this.vy = (Math.random() - 0.5) * 0.1 * (this.depth + 0.5);
-        
         this.color = colors[Math.floor(Math.random() * colors.length)];
       }
 
-      update() {
+      update(canvasWidth: number, canvasHeight: number) {
         this.x += this.vx;
         this.y += this.vy;
 
-        // Wrap around screen
-        if (this.x < 0) this.x = canvas.width;
-        if (this.x > canvas.width) this.x = 0;
-        if (this.y < 0) this.y = canvas.height;
-        if (this.y > canvas.height) this.y = 0;
+        if (this.x < 0) this.x = canvasWidth;
+        if (this.x > canvasWidth) this.x = 0;
+        if (this.y < 0) this.y = canvasHeight;
+        if (this.y > canvasHeight) this.y = 0;
 
-        // Mouse interaction (Parallax / Gentle push)
         const dx = mouseRef.current.x - this.x;
         const dy = mouseRef.current.y - this.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        const maxDist = 250;
+        const distanceSquared = dx * dx + dy * dy;
+        const maxDistSquared = 62500; // 250^2
 
-        if (distance < maxDist) {
-          const force = (maxDist - distance) / maxDist;
-          // Gentle drift away
+        if (distanceSquared < maxDistSquared) {
+          const distance = Math.sqrt(distanceSquared);
+          const force = (250 - distance) / 250;
           this.x -= (dx / distance) * force * 0.5 * this.depth;
           this.y -= (dy / distance) * force * 0.5 * this.depth;
         }
       }
 
-      draw() {
-        if (!ctx) return;
+      draw(ctx: CanvasRenderingContext2D) {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fillStyle = this.color;
         ctx.fill();
-        
-        // Add subtle glow
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = this.color;
       }
     }
 
     const init = () => {
       particles = [];
-      // Respect reduced motion preference
       const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (prefersReducedMotion) return;
 
-      // Higher density for the pixel dust effect, but optimized for mobile
-      const particleCount = window.innerWidth < 768 ? 30 : 150;
+      const particleCount = window.innerWidth < 768 ? 25 : 100;
       for (let i = 0; i < particleCount; i++) {
         particles.push(new Particle(canvas.width, canvas.height));
       }
     };
 
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach(p => {
-        p.update();
-        p.draw();
-      });
+    const animate = (currentTime: number) => {
       animationFrameId = requestAnimationFrame(animate);
+      
+      if (!isVisibleRef.current) return;
+      
+      const deltaTime = currentTime - lastTime;
+      if (deltaTime < frameInterval) return;
+      
+      lastTime = currentTime - (deltaTime % frameInterval);
+      
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      const len = particles.length;
+      for (let i = 0; i < len; i++) {
+        particles[i].update(canvas.width, canvas.height);
+        particles[i].draw(ctx);
+      }
     };
 
     const resize = () => {
       const parent = canvas.parentElement;
       if (parent) {
-        canvas.width = parent.clientWidth;
-        canvas.height = parent.clientHeight;
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const rect = parent.getBoundingClientRect();
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        canvas.style.width = `${rect.width}px`;
+        canvas.style.height = `${rect.height}px`;
+        ctx.scale(dpr, dpr);
       }
       init();
     };
@@ -122,17 +129,31 @@ export const InteractiveBackground = () => {
       mouseRef.current = { x: -1000, y: -1000 };
     };
 
-    window.addEventListener('resize', resize);
-    window.addEventListener('mousemove', handleMouseMove);
+    const handleVisibilityChange = () => {
+      isVisibleRef.current = !document.hidden;
+    };
+
+    // Throttled resize
+    let resizeTimeout: NodeJS.Timeout;
+    const throttledResize = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(resize, 100);
+    };
+
+    window.addEventListener('resize', throttledResize, { passive: true });
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
     canvas.addEventListener('mouseleave', handleMouseLeave);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
     
     resize();
-    animate();
+    animationFrameId = requestAnimationFrame(animate);
 
     return () => {
-      window.removeEventListener('resize', resize);
+      window.removeEventListener('resize', throttledResize);
       window.removeEventListener('mousemove', handleMouseMove);
       canvas.removeEventListener('mouseleave', handleMouseLeave);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      clearTimeout(resizeTimeout);
       cancelAnimationFrame(animationFrameId);
     };
   }, []);
@@ -141,6 +162,10 @@ export const InteractiveBackground = () => {
     <canvas 
       ref={canvasRef} 
       className="absolute inset-0 w-full h-full pointer-events-none"
+      style={{ willChange: 'transform' }}
+      aria-hidden="true"
     />
   );
-};
+});
+
+InteractiveBackground.displayName = 'InteractiveBackground';
