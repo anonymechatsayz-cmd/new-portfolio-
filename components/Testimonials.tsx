@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Quote, Star, BadgeCheck, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -35,41 +35,52 @@ const testimonials = [
   }
 ];
 
-const TestimonialCard: React.FC<{ quote: string, author: string, role: string, className?: string }> = ({ quote, author, role, className = "" }) => (
-  <motion.div 
-    whileHover={{ 
-      scale: 1.02, 
-      y: -5,
-      boxShadow: "0 20px 40px -5px rgba(212, 165, 116, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1)" 
-    }}
-    transition={{ type: "spring", stiffness: 300, damping: 20 }}
-    className={`bg-white p-6 md:p-8 rounded-2xl md:rounded-3xl shadow-sm border border-gray-100 hover:border-sand/40 relative flex flex-col justify-between cursor-default transition-colors duration-300 ${className}`}
-  >
-    <div className="absolute top-6 left-6 text-sand/20">
-      <Quote size={40} />
-    </div>
-    <div className="relative z-10 pt-6">
-      <div className="flex gap-1 mb-4">
-        {[...Array(5)].map((_, i) => (
-          <Star key={i} className="w-4 h-4 text-sand fill-sand" />
-        ))}
+const TestimonialCard: React.FC<{ quote: string, author: string, role: string, className?: string }> = ({ quote, author, role, className = "" }) => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  return (
+    <motion.div 
+      whileHover={!isMobile ? { 
+        scale: 1.02, 
+        y: -5,
+        boxShadow: "0 20px 40px -5px rgba(212, 165, 116, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1)" 
+      } : undefined}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      className={`bg-white p-6 md:p-8 rounded-2xl md:rounded-3xl shadow-sm border border-gray-100 hover:border-sand/40 relative flex flex-col justify-between cursor-default transition-colors duration-300 ${className}`}
+    >
+      <div className="absolute top-6 left-6 text-sand/20">
+        <Quote size={40} />
       </div>
-      <p className="text-base md:text-lg text-anthracite font-medium leading-relaxed mb-4 md:mb-6">
-        "{quote}"
-      </p>
-      <div>
-        <div className="flex items-center gap-2 mb-1">
-          <div className="font-bold text-anthracite">{author}</div>
-          <div className="flex items-center gap-1 text-xs font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded-full border border-green-100">
-            <BadgeCheck className="w-3 h-3" />
-            <span>Vérifié</span>
-          </div>
+      <div className="relative z-10 pt-6">
+        <div className="flex gap-1 mb-4">
+          {[...Array(5)].map((_, i) => (
+            <Star key={i} className="w-4 h-4 text-sand fill-sand" />
+          ))}
         </div>
-        <div className="text-gray-500 text-sm">{role}</div>
+        <p className="text-base md:text-lg text-anthracite font-medium leading-relaxed mb-4 md:mb-6">
+          "{quote}"
+        </p>
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <div className="font-bold text-anthracite">{author}</div>
+            <div className="flex items-center gap-1 text-xs font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded-full border border-green-100">
+              <BadgeCheck className="w-3 h-3" />
+              <span>Vérifié</span>
+            </div>
+          </div>
+          <div className="text-gray-500 text-sm">{role}</div>
+        </div>
       </div>
-    </div>
-  </motion.div>
-);
+    </motion.div>
+  );
+};
 
 export const Testimonials = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -131,7 +142,7 @@ export const Testimonials = () => {
       <div className="md:hidden px-6">
         <div 
           ref={scrollRef}
-          className="flex overflow-x-auto snap-x snap-mandatory pb-4 -mx-6 px-6 [&::-webkit-scrollbar]:hidden"
+          className="flex overflow-x-auto snap-x snap-mandatory pb-4 -mx-6 px-6 [&::-webkit-scrollbar]:hidden touch-pan-y"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           onScroll={handleScroll}
         >

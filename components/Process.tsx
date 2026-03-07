@@ -36,7 +36,7 @@ const Step = ({ icon: Icon, number, title, description, isLast, scrollYProgress,
     <motion.div 
       initial={{ opacity: 0, x: 20 }}
       whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
+      viewport={{ once: true, margin: "-10%" }}
       transition={{ duration: 0.5 }}
       className="relative pl-16 md:pl-24 pb-16 last:pb-0 group"
     >

@@ -109,7 +109,7 @@ export const Pricing = () => {
           <p className="text-gray-600 text-lg">Pas de coûts cachés. Garantie satisfait ou remboursé.</p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto items-stretch">
+        <div className="grid md:grid-cols-3 gap-12 md:gap-8 max-w-7xl mx-auto items-stretch">
           <PricingCard 
             title="Essentiel"
             price="490"

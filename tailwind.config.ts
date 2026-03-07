@@ -17,6 +17,8 @@ const config: Config = {
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
+        serif: ['Playfair Display', 'serif'],
+        mono: ['JetBrains Mono', 'monospace'],
       },
       backgroundImage: {
         'gradient-hero': 'linear-gradient(135deg, #1A1D29 0%, #1E3A4C 100%)',

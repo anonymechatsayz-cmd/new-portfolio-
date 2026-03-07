@@ -8,7 +8,8 @@ export const Contact = () => {
   // Utilisation de Formspree pour l'envoi d'email
   // L'ID du formulaire doit être défini dans le fichier .env (VITE_FORMSPREE_FORM_ID)
   // ou remplacé directement ici si vous n'utilisez pas de variables d'environnement
-  const [state, handleSubmit] = useForm(import.meta.env.VITE_FORMSPREE_FORM_ID || "YOUR_FORM_ID");
+  const formId = (import.meta as any).env?.VITE_FORMSPREE_FORM_ID || "YOUR_FORM_ID";
+  const [state, handleSubmit] = useForm(formId);
   
   const [activeTab, setActiveTab] = useState<'form' | 'call'>('form');
   const [bookingModal, setBookingModal] = useState<{ isOpen: boolean; url: string }>({ isOpen: false, url: '' });
