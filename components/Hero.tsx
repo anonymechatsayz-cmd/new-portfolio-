@@ -85,15 +85,16 @@ export const Hero = () => {
           <motion.a
             href="#contact"
             variants={itemVariants}
-            whileHover={{ scale: 1.05, backgroundColor: "rgba(0,0,0,0.1)" }}
-            whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center gap-2 mb-8 px-3 py-1.5 md:px-4 md:py-2 bg-stone-200/80 backdrop-blur-sm rounded-full shadow-inner cursor-pointer transition-colors"
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.98 }}
+            className="group inline-flex items-center gap-3 mb-8 px-5 py-2.5 bg-white/90 backdrop-blur-md rounded-full shadow-lg shadow-black/[0.03] border border-stone-200/60 cursor-pointer transition-all duration-300 hover:shadow-xl hover:shadow-sand/10 hover:border-sand/30"
           >
-            <span className="relative flex h-2.5 w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500 shadow-sm shadow-emerald-500/50"></span>
             </span>
-            <span className="text-[10px] md:text-xs font-bold text-anthracite uppercase tracking-widest">Disponible pour nouveaux projets</span>
+            <span className="text-[10px] md:text-xs font-semibold text-anthracite/80 uppercase tracking-[0.12em]">Disponible pour nouveaux projets</span>
+            <ArrowRight className="w-3.5 h-3.5 text-sand opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
           </motion.a>
 
           <motion.h1
@@ -144,7 +145,7 @@ export const Hero = () => {
               transition={{ duration: 50, ease: "linear", repeat: Infinity }}
             >
               {[...Array(2)].map((_, setIndex) => (
-                <div key={setIndex} className="flex gap-12 md:gap-24 pr-12 md:pr-24 shrink-0">
+                <div key={setIndex} className="flex gap-10 md:gap-20 pr-10 md:pr-20 shrink-0">
                   {[
                     { icon: CheckCircle2, text: "Livraison 7j" },
                     { icon: Rocket, text: "Site Ultra-Rapide" },
@@ -156,12 +157,15 @@ export const Hero = () => {
                   ].map((item, i) => (
                     <div 
                       key={`${setIndex}-${i}`}
-                      className="flex items-center gap-4 group"
+                      className="flex items-center gap-3 group"
                     >
-                      <div className="bg-sand/10 p-3 rounded-full group-hover:bg-sand/20 transition-colors">
-                        <item.icon className="w-6 h-6 text-sand" />
+                      <div className="relative">
+                        <div className="absolute inset-0 bg-sand/20 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        <div className="relative bg-gradient-to-br from-sand/15 to-sand/5 p-3 rounded-full border border-sand/10 group-hover:border-sand/25 group-hover:from-sand/25 group-hover:to-sand/10 transition-all duration-300">
+                          <item.icon className="w-5 h-5 text-sand" strokeWidth={2} />
+                        </div>
                       </div>
-                      <span className="font-bold text-anthracite text-lg md:text-xl whitespace-nowrap">{item.text}</span>
+                      <span className="font-semibold text-anthracite/80 text-base md:text-lg whitespace-nowrap group-hover:text-anthracite transition-colors duration-300">{item.text}</span>
                     </div>
                   ))}
                 </div>
