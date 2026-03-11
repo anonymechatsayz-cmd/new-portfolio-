@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Check, ArrowUpRight } from 'lucide-react';
-import { motion, useAnimation } from 'framer-motion';
+import { motion, useAnimation, useInView } from 'framer-motion';
 
 const PricingCard = ({ title, price, features, description, isPopular }: { title: string, price: string, features: string[], description: string, isPopular?: boolean }) => {
   const controls = useAnimation();
@@ -100,56 +100,106 @@ const PricingCard = ({ title, price, features, description, isPopular }: { title
 };
 
 export const Pricing = () => {
+  const containerRef = useRef(null);
+  const isInView = useInView(containerRef, { once: true, margin: "-100px" });
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.1,
+      }
+    }
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 50, rotateX: -15 },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      rotateX: 0,
+      transition: { 
+        type: "spring" as any,
+        stiffness: 100,
+        damping: 15,
+        mass: 1
+      }
+    }
+  };
+
   return (
-    <section id="pricing" className="py-40 bg-cream">
+    <section id="pricing" className="py-40 bg-cream overflow-hidden">
       <div className="container mx-auto px-6">
-        <div className="text-center max-w-3xl mx-auto mb-24">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="text-center max-w-3xl mx-auto mb-24"
+        >
           <span className="text-sand font-bold tracking-widest uppercase text-sm mb-4 block">Tarifs</span>
           <h2 className="text-4xl md:text-5xl font-bold font-serif text-anthracite mb-6">Investissement transparent</h2>
           <p className="text-gray-600 text-lg">Pas de coûts cachés. Garantie satisfait ou remboursé.</p>
-        </div>
+        </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-12 md:gap-8 max-w-7xl mx-auto items-stretch">
-          <PricingCard 
-            title="Essentiel"
-            price="490"
-            description="Pour démarrer votre présence en ligne."
-            features={[
-              "Site One-Page (Vitrine)",
-              "Design responsive mobile",
-              "Formulaire de contact",
-              "Hébergement offert 1 an",
-              "Livraison 7 jours"
-            ]}
-          />
-          <PricingCard 
-            title="Professionnel"
-            price="790"
-            isPopular={true}
-            description="L'offre la plus complète pour les PME."
-            features={[
-              "Tout du pack Essentiel",
-              "Optimisation SEO avancée",
-              "Google My Business setup",
-              "Analytics & Reporting",
-              "Support prioritaire 30j",
-              "Formation administration"
-            ]}
-          />
-          <PricingCard 
-            title="Premium"
-            price="1290"
-            description="Pour aller plus loin avec des fonctionnalités avancées."
-            features={[
-              "Site Multi-pages (jusqu'à 5)",
-              "Blog / Actualités",
-              "Système de réservation",
-              "SEO Local +++",
-              "Maintenance 3 mois offerte",
-              "Audit concurrentiel"
-            ]}
-          />
-        </div>
+        <motion.div 
+          ref={containerRef}
+          variants={containerVariants}
+          initial="hidden"
+          animate={isInView ? "visible" : "hidden"}
+          className="grid md:grid-cols-3 gap-12 md:gap-8 max-w-7xl mx-auto items-stretch"
+          style={{ perspective: '1000px' }}
+        >
+          <motion.div variants={cardVariants} className="h-full">
+            <PricingCard 
+              title="Essentiel"
+              price="490"
+              description="Pour démarrer votre présence en ligne."
+              features={[
+                "Site One-Page (Vitrine)",
+                "Design responsive mobile",
+                "Formulaire de contact",
+                "Hébergement offert 1 an",
+                "Livraison 7 jours"
+              ]}
+            />
+          </motion.div>
+          
+          <motion.div variants={cardVariants} className="h-full">
+            <PricingCard 
+              title="Professionnel"
+              price="790"
+              isPopular={true}
+              description="L'offre la plus complète pour les PME."
+              features={[
+                "Tout du pack Essentiel",
+                "Optimisation SEO avancée",
+                "Google My Business setup",
+                "Analytics & Reporting",
+                "Support prioritaire 30j",
+                "Formation administration"
+              ]}
+            />
+          </motion.div>
+          
+          <motion.div variants={cardVariants} className="h-full">
+            <PricingCard 
+              title="Premium"
+              price="1290"
+              description="Pour aller plus loin avec des fonctionnalités avancées."
+              features={[
+                "Site Multi-pages (jusqu'à 5)",
+                "Blog / Actualités",
+                "Système de réservation",
+                "SEO Local +++",
+                "Maintenance 3 mois offerte",
+                "Audit concurrentiel"
+              ]}
+            />
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );

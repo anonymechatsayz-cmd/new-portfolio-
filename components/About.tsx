@@ -30,7 +30,7 @@ export const About = () => {
                    <div className="w-16 h-16 rounded-full bg-anthracite flex items-center justify-center text-sand font-bold text-2xl">CF</div>
                    <div>
                       <h3 className="text-xl font-bold text-anthracite">Clément Franjou</h3>
-                      <p className="text-sm text-gray-500">Expert Next.js & Performance</p>
+                      <p className="text-sm text-gray-500">Expert Webflow & Design Stratégique</p>
                    </div>
                 </div>
 
@@ -46,7 +46,7 @@ export const About = () => {
                 </div>
 
                 <div className="flex gap-2 flex-wrap">
-                   {['React', 'Next.js', 'Tailwind', 'TypeScript'].map(tech => (
+                   {['Figma', 'Webflow', 'Relume', 'GSAP'].map(tech => (
                       <span key={tech} className="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded-full">{tech}</span>
                    ))}
                 </div>

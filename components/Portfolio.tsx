@@ -1,164 +1,12 @@
 import React, { useRef, useState, useEffect, useMemo } from 'react';
-import { motion, useScroll, useTransform, MotionValue, useInView, AnimatePresence, useSpring, useMotionValue, animate, useMotionValueEvent } from 'framer-motion';
+import { motion, useScroll, useTransform, MotionValue, useInView, AnimatePresence, useSpring, useMotionValue, animate, useMotionValueEvent, PanInfo } from 'framer-motion';
 import { ArrowUpRight, X, ArrowRight, Layers, Smartphone, Globe } from 'lucide-react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { MeshDistortMaterial, Float, Environment } from '@react-three/drei';
 import * as THREE from 'three';
 import { FluidButton } from './FluidButton';
-
-// --- TYPES ---
-
-interface ProjectResult {
-  value: string;
-  label: string;
-}
-
-interface Project {
-  id: string;
-  title: string;
-  category: string;
-  description: string;
-  longDescription: string;
-  challenge: string;
-  solution: string;
-  image: string;
-  video?: string;
-  results: ProjectResult[];
-  tags: string[];
-  link: string;
-  color: string;
-  textColor: string;
-  year: string;
-  gallery: string[];
-}
-
-// --- DATA ---
-
-const projects: Project[] = [
-  {
-    id: 'foggia',
-    title: "Foggia Ristorante",
-    category: "Hospitality",
-    year: "2023",
-    description: "Une expérience digitale qui se goûte. Immersion totale.",
-    longDescription: "Pour Foggia, un restaurant italien authentique, le site web ne devait pas être une simple vitrine, mais un avant-goût de l'expérience culinaire. Il fallait transmettre la chaleur, l'odeur du four à bois et la convivialité italienne à travers un écran.",
-    challenge: "Se différencier des milliers de pizzerias génériques. Convaincre les clients potentiels de réserver une table plutôt que de commander sur UberEats.",
-    solution: "Une direction artistique centrée sur la photographie culinaire haute définition et des micro-interactions fluides. Le module de réservation est intégré nativement pour réduire la friction au minimum.",
-    image: "https://i.postimg.cc/xjMfrnF8/Screenshot-2026-02-27-151317.png",
-    gallery: [
-      "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=1000",
-      "https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&q=80&w=1000",
-      "https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&q=80&w=1000"
-    ],
-    results: [
-      { value: "+50%", label: "Réservations Web" },
-      { value: "4.8/5", label: "Note Moyenne" },
-      { value: "15k", label: "Vues Mensuelles" },
-    ],
-    tags: ["Immersion", "Booking System", "Photography"],
-    link: "#",
-    color: "#E8E6E1",
-    textColor: "#1A1D29"
-  },
-  {
-    id: 'lc-elagage',
-    title: "L.C. Élagage",
-    category: "Paysagiste",
-    year: "2024",
-    description: "Transformation radicale d'une entreprise locale. D'invisible à omniprésent.",
-    longDescription: "L.C. Élagage était un expert reconnu localement mais invisible numériquement. Notre mission était de construire une présence digitale capable de capturer la demande locale massive pour l'élagage et l'entretien paysager.",
-    challenge: "Le marché local est saturé de petits acteurs. Le client n'avait aucune image de marque et dépendait du bouche-à-oreille. L'objectif était de devenir le leader incontesté sur Google pour la région.",
-    solution: "Nous avons créé une identité visuelle robuste et un site web ultra-rapide optimisé pour le SEO local. Chaque page est une landing page conçue pour convertir, avec des appels à l'action contextuels et une preuve sociale omniprésente.",
-    image: "https://i.postimg.cc/pXjn1wKS/Screenshot-2026-02-27-at-14-08-17-Copy-of-Copy-of-L-C-Elagage-e-Google-AI-Studio.png",
-    gallery: [
-      "https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&q=80&w=1000",
-      "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=1000",
-      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=1000"
-    ],
-    results: [
-      { value: "+300%", label: "Croissance Devis" },
-      { value: "#1", label: "Position Google" },
-      { value: "98/100", label: "Performance" },
-    ],
-    tags: ["Next.js", "SEO Local", "UX Design"],
-    link: "#",
-    color: "#F2F0EB",
-    textColor: "#1A1D29"
-  },
-  {
-    id: 'solassol',
-    title: "Cabinet Solassol",
-    category: "Corporate",
-    year: "2023",
-    description: "L'élégance de la loi. Confiance et statut.",
-    longDescription: "Le Cabinet Solassol avait besoin d'une refonte complète de son image pour correspondre à son expertise de haut niveau. L'ancien site ne reflétait pas le prestige et la rigueur de leurs services juridiques.",
-    challenge: "Moderniser l'image d'un cabinet d'avocats sans tomber dans les clichés corporate froids, tout en restant accessible et rassurant pour les clients en difficulté.",
-    solution: "Un design minimaliste, utilisant beaucoup d'espace blanc et une typographie serif élégante. La structure de l'information a été repensée pour guider l'utilisateur vers la bonne expertise en moins de 2 clics.",
-    image: "https://i.postimg.cc/VksNwp36/Screenshot-2026-02-27-145305.png",
-    gallery: [
-      "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1000",
-      "https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&q=80&w=1000",
-      "https://images.unsplash.com/photo-1507537297725-24a1c434e3db?auto=format&fit=crop&q=80&w=1000"
-    ],
-    results: [
-      { value: "+40%", label: "Leads Qualifiés" },
-      { value: "x2", label: "Taux Conversion" },
-      { value: "-30%", label: "Rebond" },
-    ],
-    tags: ["Branding", "Corporate", "Identity"],
-    link: "#",
-    color: "#DEDBD6",
-    textColor: "#1A1D29"
-  },
-  {
-    id: 'lumina',
-    title: "Lumina Studio",
-    category: "Design",
-    year: "2024",
-    description: "Une identité visuelle lumineuse pour un studio de création.",
-    longDescription: "Lumina Studio avait besoin d'un portfolio immersif pour présenter ses créations 3D et ses concepts architecturaux.",
-    challenge: "Créer une plateforme qui s'efface derrière le contenu tout en gardant une identité forte.",
-    solution: "Un design sombre, des animations fluides et une navigation spatiale innovante.",
-    image: "https://images.unsplash.com/photo-1600607686527-6fb886090705?auto=format&fit=crop&q=80&w=1000",
-    gallery: [
-      "https://images.unsplash.com/photo-1600607686527-6fb886090705?auto=format&fit=crop&q=80&w=1000",
-      "https://images.unsplash.com/photo-1600607686527-6fb886090705?auto=format&fit=crop&q=80&w=1000"
-    ],
-    results: [
-      { value: "+200%", label: "Engagement" },
-      { value: "Awwwards", label: "Site of the Day" },
-      { value: "0.8s", label: "Load Time" },
-    ],
-    tags: ["WebGL", "Three.js", "Art Direction"],
-    link: "#",
-    color: "#E5E1D8",
-    textColor: "#1A1D29"
-  },
-  {
-    id: 'maison-hotes',
-    title: "Maison D'Hôtes",
-    category: "Hospitality",
-    year: "2023",
-    description: "L'art de recevoir digitalisé.",
-    longDescription: "Une maison d'hôtes de luxe en Provence cherchait à augmenter ses réservations directes pour s'affranchir des plateformes comme Booking.com.",
-    challenge: "Transmettre le calme, le luxe et l'exclusivité du lieu à travers l'écran.",
-    solution: "Un site web expérientiel avec des vidéos en plein écran, une typographie raffinée et un système de réservation sur-mesure.",
-    image: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&q=80&w=1000",
-    gallery: [
-      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&q=80&w=1000",
-      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&q=80&w=1000"
-    ],
-    results: [
-      { value: "65%", label: "Réservations Directes" },
-      { value: "+120%", label: "Trafic Organique" },
-      { value: "4.9/5", label: "Satisfaction" },
-    ],
-    tags: ["Hospitality", "SEO", "UX Design"],
-    link: "#",
-    color: "#E8E6E1",
-    textColor: "#1A1D29"
-  }
-];
+import { useNavigate } from 'react-router-dom';
+import { projects, Project } from '../data/projects';
 
 // --- COMPONENTS ---
 
@@ -181,8 +29,8 @@ const ParticlesWave = ({ activeTextColor }: { activeTextColor: string }) => {
 
   // Create a denser grid of points for a more fluid, fabric-like feel
   const { positions, initialPositions } = useMemo(() => {
-    const gridSize = 120;
-    const spacing = 0.4;
+    const gridSize = window.innerWidth < 768 ? 35 : 60; // Optimized for performance
+    const spacing = window.innerWidth < 768 ? 1.4 : 0.8;
     const count = gridSize * gridSize;
     const pos = new Float32Array(count * 3);
     const initPos = new Float32Array(count * 3);
@@ -221,7 +69,7 @@ const ParticlesWave = ({ activeTextColor }: { activeTextColor: string }) => {
     const mz = -mousePos.current.y * 25 - 10; 
 
     let i = 0;
-    const gridSize = 120;
+    const gridSize = window.innerWidth < 768 ? 35 : 60; // Optimized for performance
     for (let x = -gridSize/2; x < gridSize/2; x++) {
       for (let z = -gridSize/2; z < gridSize/2; z++) {
         const px = initialPositions[i];
@@ -330,308 +178,11 @@ const MagneticButton = ({ children, onClick, className }: { children: React.Reac
   );
 };
 
-const ProjectDetails = ({ 
-  project, 
-  onClose, 
-  onNext 
-}: { 
-  project: Project, 
-  onClose: () => void,
-  onNext: () => void
-}) => {
-  const scrollContainer = useRef<HTMLDivElement>(null);
-  const modalRef = useRef<HTMLDivElement>(null);
-  const { scrollY } = useScroll({ container: scrollContainer });
-  
-  // Keep the layoutId fixed to the project that opened the modal
-  const [initialProjectId] = useState(project.id);
-  
-  // Parallax for Hero Image
-  const heroY = useTransform(scrollY, [0, 500], [0, 200]);
-  const heroScale = useTransform(scrollY, [0, 500], [1.1, 1.2]);
-
-  useEffect(() => {
-    const originalBodyOverflow = document.body.style.overflow;
-    const originalHtmlOverflow = document.documentElement.style.overflow;
-    
-    document.body.style.overflow = 'hidden';
-    document.documentElement.style.overflow = 'hidden';
-    
-    // Focus management for accessibility
-    modalRef.current?.focus();
-
-    // Escape key listener
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-
-    return () => { 
-      document.body.style.overflow = originalBodyOverflow; 
-      document.documentElement.style.overflow = originalHtmlOverflow;
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [onClose]);
-
-  // Reset scroll position when project changes
-  useEffect(() => {
-    if (scrollContainer.current) {
-      scrollContainer.current.scrollTop = 0;
-    }
-  }, [project.id]);
-
-  return (
-    <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-      className="fixed inset-0 z-[100] flex items-end md:items-center justify-center bg-black/80 backdrop-blur-2xl p-0 md:p-6"
-      onClick={onClose}
-      onWheel={(e) => e.stopPropagation()}
-      onTouchMove={(e) => e.stopPropagation()}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="modal-title"
-    >
-      {/* Subtle Noise Overlay for the backdrop */}
-      <div 
-        className="absolute inset-0 opacity-[0.04] pointer-events-none mix-blend-overlay"
-        style={{ backgroundImage: `url("https://grainy-gradients.vercel.app/noise.svg")` }}
-      />
-
-      <motion.div 
-        ref={modalRef}
-        tabIndex={-1}
-        layoutId={`card-container-${initialProjectId}`}
-        initial={{ borderRadius: 32 }}
-        animate={{ borderRadius: 32 }}
-        exit={{ borderRadius: 32, opacity: 0, scale: 0.95 }}
-        transition={{ type: "spring", stiffness: 300, damping: 30, mass: 0.8 }}
-        className="w-full max-w-[1400px] h-[95vh] md:h-[90vh] bg-[#FAF9F7] md:rounded-[2rem] rounded-t-[2rem] overflow-hidden relative flex flex-col shadow-2xl outline-none"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Mobile Drag Handle Indicator */}
-        <div className="w-full h-8 absolute top-0 left-0 z-[70] flex items-center justify-center md:hidden pointer-events-none">
-          <div className="w-12 h-1.5 bg-white/40 rounded-full" />
-        </div>
-
-        {/* Close Button */}
-        <div className="absolute top-4 right-4 md:top-8 md:right-8 z-[60]">
-          <MagneticButton 
-            onClick={onClose}
-            className="w-12 h-12 bg-black/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white hover:text-black transition-all duration-300 border border-white/10 shadow-lg focus:outline-none focus:ring-2 focus:ring-white/50"
-          >
-            <X className="w-5 h-5" />
-          </MagneticButton>
-        </div>
-
-        {/* Scrollable Container */}
-        <div ref={scrollContainer} className="overflow-y-auto h-full w-full custom-scrollbar relative">
-          
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={project.id}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              {/* Hero Section */}
-              <div className="relative w-full h-[60vh] md:h-[70vh] bg-black">
-                <motion.div 
-                  style={{ y: heroY, scale: heroScale, borderTopLeftRadius: 32, borderTopRightRadius: 32 }}
-                  className="w-full h-full overflow-hidden"
-                >
-                  <motion.img 
-                    src={project.image} 
-                    alt={project.title}
-                    initial={{ scale: 1.1 }}
-                    animate={{ scale: 1 }}
-                    transition={{ duration: 10, ease: "linear", repeat: Infinity, repeatType: "reverse" }}
-                    className="w-full h-full object-cover opacity-80"
-                  />
-                </motion.div>
-                
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                
-                <div className="absolute bottom-0 left-0 w-full p-8 md:p-16 z-10">
-                  <motion.div 
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 }}
-                    className="flex items-center gap-4 mb-6"
-                  >
-                    <span className="px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-md text-white text-xs font-bold uppercase tracking-wider border border-white/10">
-                      {project.category}
-                    </span>
-                    <span className="text-white/80 font-mono text-sm">{project.year}</span>
-                  </motion.div>
-                  
-                  <motion.h2 
-                    id="modal-title"
-                    initial={{ opacity: 0, y: 40 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3, duration: 0.8, ease: "easeOut" }}
-                    className="text-5xl md:text-[8vw] font-black text-white tracking-tighter leading-[0.85] mix-blend-overlay opacity-90"
-                  >
-                    {project.title}
-                  </motion.h2>
-                </div>
-              </div>
-
-              {/* Content */}
-              <div className="bg-[#FAF9F7] p-8 md:p-16 relative z-20" style={{ backgroundColor: project.color }}>
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
-                  
-                  {/* Left Column: Context & Stats */}
-                  <div className="lg:col-span-4 space-y-12 lg:sticky lg:top-12 h-fit">
-                    <motion.div 
-                      initial={{ opacity: 0, x: -20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                    >
-                      <h3 className="text-xs font-bold uppercase tracking-widest opacity-40 mb-4" style={{ color: project.textColor }}>Services</h3>
-                      <div className="flex flex-wrap gap-2">
-                        {project.tags.map(tag => (
-                          <span key={tag} className="px-3 py-1.5 border border-black/10 rounded-full text-xs font-bold opacity-60" style={{ color: project.textColor }}>
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    </motion.div>
-
-                    <motion.div 
-                      initial={{ opacity: 0, x: -20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: 0.1 }}
-                    >
-                      <h3 className="text-xs font-bold uppercase tracking-widest opacity-40 mb-4" style={{ color: project.textColor }}>Impact</h3>
-                      <div className="space-y-4">
-                        {project.results.map((res, i) => (
-                          <div key={i} className="flex items-baseline justify-between border-b border-black/10 pb-3">
-                            <span className="text-4xl font-black text-[#C9A56B]">{res.value}</span>
-                            <span className="text-xs font-bold uppercase tracking-wide opacity-60" style={{ color: project.textColor }}>{res.label}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </motion.div>
-
-                    <motion.a 
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: 0.2 }}
-                      href={project.link}
-                      className="inline-flex items-center justify-center w-full bg-[#1A1D29] text-white px-8 py-6 rounded-xl group hover:bg-[#C9A56B] transition-colors duration-300 shadow-xl"
-                    >
-                      <span className="text-lg font-bold tracking-wide mr-4">Visiter le site</span>
-                      <Globe className="w-5 h-5" />
-                    </motion.a>
-                  </div>
-
-                  {/* Right Column: Story */}
-                  <div className="lg:col-span-8 space-y-24">
-                    <motion.div 
-                      initial={{ opacity: 0, y: 40 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                    >
-                      <h3 className="text-4xl font-bold mb-8" style={{ color: project.textColor }}>Le Projet</h3>
-                      <p className="text-2xl leading-relaxed font-medium opacity-80" style={{ color: project.textColor }}>
-                        {project.longDescription}
-                      </p>
-                    </motion.div>
-
-                    <div className="grid md:grid-cols-2 gap-8">
-                      <motion.div 
-                        initial={{ opacity: 0, y: 40 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.1 }}
-                        className="bg-white/50 p-10 rounded-3xl border border-black/5"
-                      >
-                        <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mb-6 text-red-600">
-                          <Layers className="w-6 h-6" />
-                        </div>
-                        <h4 className="text-xl font-bold mb-4" style={{ color: project.textColor }}>Le Challenge</h4>
-                        <p className="text-base leading-relaxed opacity-70" style={{ color: project.textColor }}>
-                          {project.challenge}
-                        </p>
-                      </motion.div>
-                      <motion.div 
-                        initial={{ opacity: 0, y: 40 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.2 }}
-                        className="bg-white/50 p-10 rounded-3xl border border-black/5"
-                      >
-                        <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-6 text-green-600">
-                          <Smartphone className="w-6 h-6" />
-                        </div>
-                        <h4 className="text-xl font-bold mb-4" style={{ color: project.textColor }}>La Solution</h4>
-                        <p className="text-base leading-relaxed opacity-70" style={{ color: project.textColor }}>
-                          {project.solution}
-                        </p>
-                      </motion.div>
-                    </div>
-
-                    {/* Gallery */}
-                    <div>
-                      <h3 className="text-3xl font-bold mb-12" style={{ color: project.textColor }}>Galerie</h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        {project.gallery.map((img, idx) => (
-                          <motion.div 
-                            key={idx} 
-                            initial={{ opacity: 0, y: 40 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: idx * 0.1 }}
-                            className={`rounded-2xl overflow-hidden shadow-lg ${idx === 0 ? 'md:col-span-2 aspect-[21/9]' : 'aspect-[4/3]'}`}
-                          >
-                            <img src={img} alt="Gallery" className="w-full h-full object-cover hover:scale-105 transition-transform duration-[1.5s] ease-out" />
-                          </motion.div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Next Project Navigation */}
-                    <motion.div 
-                      initial={{ opacity: 0 }}
-                      whileInView={{ opacity: 1 }}
-                      viewport={{ once: true }}
-                      onClick={onNext}
-                      className="border-t border-black/10 pt-16 mt-16 cursor-pointer group"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <span className="text-sm font-bold uppercase tracking-widest opacity-40 block mb-4" style={{ color: project.textColor }}>
-                            Projet Suivant
-                          </span>
-                          <span className="text-5xl md:text-7xl font-black group-hover:text-[#C9A56B] transition-colors tracking-tighter" style={{ color: project.textColor }}>
-                            Découvrir la suite
-                          </span>
-                        </div>
-                        <div className="w-24 h-24 rounded-full bg-black/5 flex items-center justify-center group-hover:bg-[#C9A56B] group-hover:text-white transition-all duration-500 group-hover:scale-110">
-                          <ArrowRight className="w-10 h-10" />
-                        </div>
-                      </div>
-                    </motion.div>
-
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </AnimatePresence>
-        </div>
-      </motion.div>
-    </motion.div>
-  );
-};
-
 const Cursor = ({ cursorState, mouseX, mouseY }: { cursorState: string, mouseX: any, mouseY: any }) => {
   const isVisible = cursorState !== 'default';
+  
+  // Hide custom cursor on mobile devices
+  if (typeof window !== 'undefined' && window.innerWidth < 768) return null;
   
   return (
     <motion.div 
@@ -650,7 +201,7 @@ const Cursor = ({ cursorState, mouseX, mouseY }: { cursorState: string, mouseX: 
       }}
     >
       <motion.div 
-        className="w-24 h-24 rounded-full flex items-center justify-center font-bold text-sm tracking-widest uppercase shadow-2xl"
+        className="w-24 h-24 rounded-full flex items-center justify-center font-bold text-[10px] tracking-widest uppercase shadow-2xl"
         animate={{
           scale: cursorState === 'view' ? 1 : 0.85,
           backgroundColor: cursorState === 'view' ? '#C9A56B' : '#ffffff',
@@ -658,8 +209,8 @@ const Cursor = ({ cursorState, mouseX, mouseY }: { cursorState: string, mouseX: 
         }}
         transition={{ type: "spring", stiffness: 500, damping: 28, mass: 0.5 }}
       >
-        {cursorState === 'view' && 'VIEW'}
-        {cursorState === 'drag' && 'DRAG'}
+        {cursorState === 'view' && 'VOIR'}
+        {cursorState === 'drag' && 'GLISSER'}
         {cursorState === 'prev' && <ArrowRight className="w-6 h-6 rotate-180" />}
         {cursorState === 'next' && <ArrowRight className="w-6 h-6" />}
       </motion.div>
@@ -773,6 +324,10 @@ const CarouselCard = ({
     const targetX = RADIUS * Math.sin(t * Math.PI / 180);
     x.set(targetX * e);
 
+    // rotateX
+    const targetRotateX = Math.sin(t * Math.PI / 180) * 10;
+    rotateX.set(targetRotateX * e);
+
     // scale
     const cos = Math.cos(t * Math.PI / 180);
     const targetScale = 0.6 + (cos + 1) * 0.2;
@@ -827,7 +382,7 @@ const CarouselCard = ({
   const tagsX = useTransform(theta, (t) => Math.sin(t * Math.PI / 180) * 50);
 
   // Inner Parallax for the image
-  const imageX = useTransform(offset, [-1, 0, 1], ['-15%', '0%', '15%']);
+  const imageX = useTransform(offset, [-1, 0, 1], [-60, 0, 60]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -863,19 +418,13 @@ const CarouselCard = ({
       return;
     }
     
-    const rect = e.currentTarget.getBoundingClientRect();
-    const mouseY = e.clientY - rect.top;
-    const height = rect.height;
-    
-    if (mouseY < height * 0.55) {
-      onClick();
-    }
+    // If it's the center card, any click opens the modal
+    onClick();
   };
 
   return (
     <motion.div 
       ref={cardRef}
-      layoutId={`card-container-${project.id}`}
       style={{
         rotateY,
         rotateX,
@@ -920,16 +469,14 @@ const CarouselCard = ({
       />
 
       {/* Image Section */}
-      <div className="w-full h-[55%] relative pointer-events-none">
+      <div className="w-full h-[55%] relative pointer-events-none overflow-hidden" style={{ borderTopLeftRadius: 32, borderTopRightRadius: 32 }}>
         <motion.div 
-          layoutId={`card-image-${project.id}`}
-          className="w-full h-full overflow-hidden"
-          style={{ borderTopLeftRadius: 32, borderTopRightRadius: 32 }}
+          style={{ x: imageX, width: '100%', height: '100%' }}
         >
-          <img 
+          <motion.img 
             src={project.image} 
             alt={project.title}
-            className="w-full h-full object-cover object-top"
+            className="w-full h-full object-cover"
           />
         </motion.div>
         {/* Subtle gradient overlay to blend image with content */}
@@ -954,14 +501,14 @@ const CarouselCard = ({
               0{index + 1}
             </span>
             <div className="h-[1px] w-8 bg-current opacity-20" style={{ color: project.textColor }} />
-            <motion.span layoutId={`card-category-${project.id}`} className="text-[10px] font-bold uppercase tracking-[0.15em] opacity-80" style={{ color: project.textColor }}>
+            <span className="text-[10px] font-bold uppercase tracking-[0.15em] opacity-80" style={{ color: project.textColor }}>
               {project.category}
-            </motion.span>
+            </span>
           </div>
           
-          <motion.h3 layoutId={`card-title-${project.id}`} className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black tracking-tighter leading-[0.85] transition-colors duration-300" style={{ color: project.textColor }}>
+          <h3 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black tracking-tighter leading-[0.85] transition-colors duration-300" style={{ color: project.textColor }}>
             {project.title}
-          </motion.h3>
+          </h3>
         </motion.div>
 
         <div className="flex items-center justify-between mt-6">
@@ -1008,7 +555,7 @@ const CarouselCard = ({
 // --- MAIN COMPONENT ---
 
 export const Portfolio = () => {
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const navigate = useNavigate();
   const [cursorState, setCursorState] = useState('default');
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
   const [isDragging, setIsDragging] = useState(false);
@@ -1119,20 +666,10 @@ export const Portfolio = () => {
   }, [next, prev]);
 
   const handleWheel = (e: React.WheelEvent) => {
-    // Prevent default scrolling when hovering the carousel to allow smooth horizontal scroll
+    // Only capture horizontal scrolling to prevent trapping the user vertically
     if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
       dragX.set(dragX.get() - e.deltaX * 1.5);
-    } else {
-      dragX.set(dragX.get() - e.deltaY * 1.5);
     }
-  };
-
-  const handleNextProject = () => {
-    if (!selectedProject) return;
-    const currentIdx = projects.findIndex(p => p.id === selectedProject.id);
-    const nextIdx = (currentIdx + 1) % projects.length;
-    setSelectedProject(projects[nextIdx]);
-    centerCard(nextIdx);
   };
 
   return (
@@ -1159,10 +696,10 @@ export const Portfolio = () => {
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
             <span className="text-[#1A1D29] font-mono text-sm tracking-[0.2em] uppercase mb-4 md:mb-6 block font-bold">
-              Selected Works
+              Projets Sélectionnés
             </span>
             <h2 className="text-[15vw] md:text-[8vw] leading-[0.85] md:leading-[0.8] font-black text-[#1A1D29] tracking-tighter">
-              DIGITAL<br/>IMPACT
+              IMPACT<br/>DIGITAL
             </h2>
           </motion.div>
           <motion.div 
@@ -1175,18 +712,23 @@ export const Portfolio = () => {
             <p className="text-[#1A1D29] text-lg md:text-xl font-medium max-w-md leading-relaxed text-left md:text-right opacity-80">
               Une sélection de projets où design, performance et business ne font qu'un.
             </p>
-            {/* Progress Indicator */}
-            <div className="flex items-center gap-4 font-mono text-sm font-bold opacity-60 w-full md:w-auto justify-between md:justify-end">
-              <span>0{activeIndex + 1}</span>
-              <div className="w-full md:w-16 h-[2px] bg-[#1A1D29]/20 relative overflow-hidden rounded-full flex-grow md:flex-grow-0">
-                <motion.div 
-                  className="absolute top-0 left-0 h-full bg-[#1A1D29]"
-                  initial={{ width: '0%' }}
-                  animate={{ width: `${((activeIndex + 1) / projects.length) * 100}%` }}
-                  transition={{ duration: 0.3 }}
-                />
+            {/* Progress Indicator and Drag Hint */}
+            <div className="flex flex-col items-start md:items-end gap-2 w-full md:w-auto">
+              <div className="flex items-center gap-4 font-mono text-sm font-bold opacity-60 w-full md:w-auto justify-between md:justify-end">
+                <span>0{activeIndex + 1}</span>
+                <div className="w-full md:w-16 h-[2px] bg-[#1A1D29]/20 relative overflow-hidden rounded-full flex-grow md:flex-grow-0">
+                  <motion.div 
+                    className="absolute top-0 left-0 h-full bg-[#1A1D29]"
+                    initial={{ width: '0%' }}
+                    animate={{ width: `${((activeIndex + 1) / projects.length) * 100}%` }}
+                    transition={{ duration: 0.3 }}
+                  />
+                </div>
+                <span>0{projects.length}</span>
               </div>
-              <span>0{projects.length}</span>
+              <span className="text-[10px] md:text-xs font-mono uppercase tracking-[0.2em] text-[#1A1D29]/50 font-bold flex items-center gap-2">
+                <ArrowRight className="w-3 h-3" /> Drag to explore
+              </span>
             </div>
           </motion.div>
         </div>
@@ -1218,7 +760,7 @@ export const Portfolio = () => {
               centerCard={centerCard}
               project={project} 
               onClick={() => {
-                setSelectedProject(project);
+                navigate(`/projet/${project.id}`);
                 setCursorState('default');
               }}
               setCursorState={setCursorState}
@@ -1230,33 +772,40 @@ export const Portfolio = () => {
           ))}
         </motion.div>
         
+        {/* Drag Indicator Text */}
+        <div className="flex items-center justify-center mt-8 md:mt-12 opacity-50 relative z-10 pointer-events-none">
+           <div className="flex items-center gap-4 text-[#1A1D29] font-mono text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase">
+              <ArrowRight className="w-3 h-3 md:w-4 md:h-4 rotate-180" />
+              <span>Glisser pour explorer</span>
+              <ArrowRight className="w-3 h-3 md:w-4 md:h-4" />
+           </div>
+        </div>
+
         {/* Navigation Buttons */}
-        <div className="flex items-center justify-center gap-4 mt-16 relative z-10">
+        <div className="flex items-center justify-center gap-4 mt-6 md:mt-8 relative z-10">
           <MagneticButton 
             onClick={prev}
-            className="w-14 h-14 rounded-full border border-[#1A1D29] flex items-center justify-center transition-colors duration-300 hover:bg-[#1A1D29] hover:text-white"
+            className="w-12 h-12 md:w-14 md:h-14 rounded-full border border-[#1A1D29] flex items-center justify-center transition-colors duration-300 hover:bg-[#1A1D29] hover:text-white"
           >
-            <ArrowRight className="w-6 h-6 rotate-180" />
+            <ArrowRight className="w-5 h-5 md:w-6 md:h-6 rotate-180" />
           </MagneticButton>
           <MagneticButton 
             onClick={next}
-            className="w-14 h-14 rounded-full border border-[#1A1D29] flex items-center justify-center transition-colors duration-300 hover:bg-[#1A1D29] hover:text-white"
+            className="w-12 h-12 md:w-14 md:h-14 rounded-full border border-[#1A1D29] flex items-center justify-center transition-colors duration-300 hover:bg-[#1A1D29] hover:text-white"
           >
-            <ArrowRight className="w-6 h-6" />
+            <ArrowRight className="w-5 h-5 md:w-6 md:h-6" />
           </MagneticButton>
         </div>
       </div>
 
       {/* Final CTA */}
       <div className="h-[50vh] md:h-[60vh] flex items-center justify-center bg-[#1A1D29] text-white rounded-t-[2rem] md:rounded-t-[3rem] relative z-20 overflow-hidden">
-        {/* Subtle background elements */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-full bg-gradient-to-b from-sand/10 to-transparent opacity-50 pointer-events-none" />
         
         <div className="text-center px-6 relative z-10 flex flex-col items-center">
           <h3 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-12 md:mb-16 tracking-tight text-white">
-            Vous avez un{' '}
+            Prêt à marquer les{' '}
             <span className="relative inline-block">
-              <span className="text-sand relative z-10">projet ?</span>
+              <span className="text-sand relative z-10">esprits ?</span>
               {/* Organic Hand-drawn SVG Underline */}
               <svg 
                 className="absolute -bottom-3 md:-bottom-4 left-0 w-full h-4 md:h-6 text-sand" 
@@ -1291,17 +840,6 @@ export const Portfolio = () => {
           </FluidButton>
         </div>
       </div>
-
-      {/* Case Study Modal */}
-      <AnimatePresence>
-        {selectedProject && (
-          <ProjectDetails 
-            project={selectedProject} 
-            onClose={() => setSelectedProject(null)} 
-            onNext={handleNextProject}
-          />
-        )}
-      </AnimatePresence>
 
     </motion.section>
   );

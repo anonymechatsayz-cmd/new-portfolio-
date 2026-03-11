@@ -87,21 +87,21 @@ export const Testimonials = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const handleScroll = () => {
-    if (scrollRef.current) {
+    if (scrollRef.current && scrollRef.current.children.length > 0) {
       const scrollLeft = scrollRef.current.scrollLeft;
-      const width = scrollRef.current.offsetWidth;
-      const newIndex = Math.round(scrollLeft / width);
-      if (newIndex !== currentIndex) {
+      const itemWidth = scrollRef.current.children[0].clientWidth + 16; // 16px is gap-4
+      const newIndex = Math.round(scrollLeft / itemWidth);
+      if (newIndex !== currentIndex && newIndex >= 0 && newIndex < testimonials.length) {
         setCurrentIndex(newIndex);
       }
     }
   };
 
   const scrollToTestimonial = (index: number) => {
-    if (scrollRef.current) {
-      const width = scrollRef.current.offsetWidth;
+    if (scrollRef.current && scrollRef.current.children.length > 0) {
+      const itemWidth = scrollRef.current.children[0].clientWidth + 16;
       scrollRef.current.scrollTo({
-        left: index * width,
+        left: index * itemWidth,
         behavior: 'smooth'
       });
       setCurrentIndex(index);
@@ -139,17 +139,17 @@ export const Testimonials = () => {
       </div>
 
       {/* Mobile View - Swipe Carousel */}
-      <div className="md:hidden px-6">
+      <div className="md:hidden w-full">
         <div 
           ref={scrollRef}
-          className="flex overflow-x-auto snap-x snap-mandatory pb-4 -mx-6 px-6 [&::-webkit-scrollbar]:hidden touch-pan-y"
+          className="flex overflow-x-auto snap-x snap-mandatory pb-8 pt-4 px-6 gap-4 scroll-pl-6 [&::-webkit-scrollbar]:hidden touch-pan-x"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           onScroll={handleScroll}
         >
           {testimonials.map((testimonial, index) => (
             <div 
               key={index} 
-              className="w-full flex-shrink-0 snap-center px-2"
+              className="w-[85vw] flex-shrink-0 snap-start"
             >
               <TestimonialCard 
                 quote={testimonial.quote}

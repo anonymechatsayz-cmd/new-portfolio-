@@ -14,7 +14,7 @@ import { Footer } from './Footer';
 export const Home: React.FC = () => {
   useEffect(() => {
     const sections = [
-      { id: 'hero', title: 'Clément Franjou | Développeur Web Freelance Next.js' },
+      { id: 'hero', title: 'Clément Franjou | Studio Design & Webflow' },
       { id: 'services', title: 'Services | Clément Franjou' },
       { id: 'portfolio', title: 'Portfolio | Clément Franjou' },
       { id: 'process', title: 'Process | Clément Franjou' },

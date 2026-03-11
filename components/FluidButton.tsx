@@ -41,7 +41,7 @@ export const FluidButton = ({ children, onClick, className = "", href, bgClass }
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`relative overflow-hidden group rounded-full font-bold shadow-lg hover:shadow-sand/20 transition-all duration-300 border border-white/10 ${className || "px-8 py-4 text-white"}`}
+      className={`relative inline-flex items-center justify-center overflow-hidden group rounded-full font-bold shadow-lg hover:shadow-sand/20 transition-all duration-300 border border-white/10 ${className || "px-8 py-4 text-white"}`}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
     >

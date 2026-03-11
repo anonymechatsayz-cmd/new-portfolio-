@@ -63,7 +63,7 @@ export const FAQ = () => {
               />
               <FAQItem 
                 question="7 jours, ce n'est pas trop rapide pour être qualitatif ?"
-                answer="Au contraire. La plupart des projets traînent à cause des allers-retours inutiles. Mon process est carré : on valide tout au début, je fonce, on livre. J'utilise des technologies modernes (Next.js) qui me permettent de développer vite et bien."
+                answer="Au contraire. La plupart des projets traînent à cause des allers-retours inutiles. Mon process est carré : on valide tout au début, je fonce, on livre. J'utilise des technologies modernes (Webflow, Figma) qui me permettent de concevoir et développer vite et bien."
               />
               <FAQItem 
                 question="Est-ce que le site va vraiment m'apporter des clients ?"
